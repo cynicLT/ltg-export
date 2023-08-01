@@ -1,0 +1,13 @@
+havingvalue
+sequencename
+qualifiedbyname
+earningssimple
+expensessimple
+earningsdetails
+expensesdetails
+datetime
+rubvalue
+cbr
+joincolumns
+referenceid
+referencetype

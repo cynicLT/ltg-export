@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+    <!--    File-->
+    <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="file">
+        <file>data/logs/${spring.application.name}.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>data/logs/${spring.application.name}-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <maxHistory>10</maxHistory>
+            <maxFileSize>10MB</maxFileSize>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="fileAudit">
+        <file>data/logs/${spring.application.name}-audit.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>data/logs/${spring.application.name}-audit-%d{yyyy-MM-dd}.%i.log.zip
+            </fileNamePattern>
+            <maxHistory>10</maxHistory>
+            <maxFileSize>30MB</maxFileSize>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX}] %message%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--    Async -->
+    <appender class="ch.qos.logback.classic.AsyncAppender" name="asyncFile">
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.JaninoEventEvaluator">
+                <expression>return event.getMarkerList() ==null || !event.getMarkerList().contains(org.cynic.logistics.Constants.AUDIT_MARKER);</expression>
+            </evaluator>
+            <OnMismatch>DENY</OnMismatch>
+        </filter>
+        <appender-ref ref="file"/>
+    </appender>
+
+    <appender class="ch.qos.logback.classic.AsyncAppender" name="asyncFileAudit">
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.JaninoEventEvaluator">
+                <expression>return event.getMarkerList() !=null &amp;&amp; event.getMarkerList().contains(org.cynic.logistics.Constants.AUDIT_MARKER);
+                </expression>
+            </evaluator>
+            <OnMismatch>DENY</OnMismatch>
+        </filter>
+        <appender-ref ref="fileAudit"/>
+    </appender>
+
+    <logger level="INFO" name="org.cynic.ltg_export">
+        <appender-ref ref="asyncFileAudit"/>
+    </logger>
+
+    <root level="ERROR">
+        <appender-ref ref="asyncFile"/>
+    </root>
+</included>

@@ -1,0 +1,26 @@
+name: build
+
+permissions:
+  actions: none
+  checks: read
+  contents: read
+
+on: [ push ]
+
+jobs:
+  build:
+    strategy:
+      max-parallel: 2
+      matrix:
+        os: [ windows-latest, ubuntu-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+      - uses: actions/setup-java@v4
+        with:
+          java-version: 23
+          distribution: temurin
+      - run: mvn clean verify -Ppipeline

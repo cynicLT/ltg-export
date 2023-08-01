@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <variable name="LOG_EXCEPTION_CONVERSION_WORD" value="%wEx{full, org.springframework}"/>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <springProperty name="spring.application.name" source="spring.application.name"/>
+
+    <!--NOTE: unable to use springProperty due to error in logback https://jira.qos.ch/browse/LOGBACK-1731 -->
+    <springProfile name="local">
+        <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+        <include resource="logging/logback-local.xml"/>
+    </springProfile>
+
+    <springProfile name="prod">
+        <include resource="logging/logback-prod.xml"/>
+    </springProfile>
+</configuration>

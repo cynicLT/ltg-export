@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <Match>
+        <And>
+            <Or>
+                <Class name="~.*[.]Configuration[$]?.*"/>
+                <Package name="~.*[.]controller[.]?.*"/>
+                <Package name="~.*[.]service[.]?.*"/>
+                <Package name="~.*[.]converter[.]?.*"/>
+            </Or>
+            <Or>
+                <Bug pattern="EI_EXPOSE_REP2"/>
+                <Bug pattern="EI_EXPOSE_REP"/>
+            </Or>
+        </And>
+    </Match>
+    <Match>
+        <And>
+            <Package name="~.*[.]domain[.]?.*"/>
+
+            <Or>
+                <Bug pattern="UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD"/>
+                <Bug pattern="UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD"/>
+                <Bug pattern="EI_EXPOSE_REP2"/>
+                <Bug pattern="EI_EXPOSE_REP"/>
+                <Bug pattern="DLS_DEAD_LOCAL_STORE"/>
+                <Bug pattern="NM_METHOD_NAMING_CONVENTION"/>
+
+            </Or>
+        </And>
+    </Match>
+    <Match>
+        <And>
+            <Or>
+                <Class name="~.*[.]Configuration[$]?.*"/>
+            </Or>
+            <Or>
+                <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+                <Bug pattern="URLCONNECTION_SSRF_FD"/>
+
+            </Or>
+        </And>
+    </Match>
+    <Match>
+        <And>
+            <Or>
+                <Package name="~.*[.]mapper[.]?.*"/>
+            </Or>
+            <Or>
+                <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+            </Or>
+        </And>
+    </Match>
+</FindBugsFilter>
