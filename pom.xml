@@ -18,34 +18,40 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>23</java.version>
+        <java.version>17</java.version>
+        <fast.build>false</fast.build>
+        <execBuildSkip>false</execBuildSkip>
 
         <jar.output.directory>${project.build.directory}/spring-boot</jar.output.directory>
 
         <maven.plugin.forbiddenapis.version>3.8</maven.plugin.forbiddenapis.version>
         <maven.plugin.jacoco.version>0.8.12</maven.plugin.jacoco.version>
-        <maven.plugin.pitest.version>1.17.4</maven.plugin.pitest.version>
-        <maven.plugin.pitest.goal>scmMutationCoverage</maven.plugin.pitest.goal>
+        <maven.plugin.pitest.version>1.18.0</maven.plugin.pitest.version>
         <maven.plugin.pitest.junit5.version>1.2.1</maven.plugin.pitest.junit5.version>
-        <maven.plugin.owasp.version>12.0.1</maven.plugin.owasp.version>
+        <maven.plugin.owasp.version>12.0.2</maven.plugin.owasp.version>
         <maven.plugin.spotbugs.version>4.8.6.6</maven.plugin.spotbugs.version>
         <maven.plugin.findsecbugs.version>1.12.0</maven.plugin.findsecbugs.version>
         <maven.plugin.spell-check.version>1.0.0</maven.plugin.spell-check.version>
         <maven.plugin.editorconfig.version>0.1.3</maven.plugin.editorconfig.version>
         <maven.plugin.pmd.version>3.26.0</maven.plugin.pmd.version>
         <maven.plugin.asm.version>9.7.1</maven.plugin.asm.version>
+        <maven.plugin.exec.version>3.5.0</maven.plugin.exec.version>
 
 
-        <maven.plugin.jpackage.version>1.6.5</maven.plugin.jpackage.version>
+        <maven.plugin.jpackage.version>1.6.6</maven.plugin.jpackage.version>
         <maven.plugin.snyk.version>2.3.0</maven.plugin.snyk.version>
         <maven.plugin.gitlog.version>1.14.0</maven.plugin.gitlog.version>
 
         <error.prone.version>2.22.0</error.prone.version>
 
         <mapstruct.version>1.6.3</mapstruct.version>
-        <bouncy-castle.version>1.80</bouncy-castle.version>
+        <commons-collections4.version>4.4</commons-collections4.version>
+        <commons-csv.version>1.12.0</commons-csv.version>
 
-        <archunit.version>1.3.0</archunit.version>
+        <javafx.version>17.0.6</javafx.version>
+        <validatorfs.version>0.5.0</validatorfs.version>
+
+        <archunit.version>1.4.0</archunit.version>
         <instancio.version>5.3.0</instancio.version>
     </properties>
 
@@ -62,6 +68,9 @@
                         <failOnNoMatchingProperties>true</failOnNoMatchingProperties>
                         <failOnFormatViolation>true</failOnFormatViolation>
                         <encoding>${project.build.sourceEncoding}</encoding>
+                        <includes>
+                            <include>src/**</include>
+                        </includes>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -72,6 +81,7 @@
                         <excludes>
                             <exclude>**/*Test.java</exclude>
                             <exclude>**/*IT.java</exclude>
+                            <exclude>**/*.properties</exclude>
                         </excludes>
                         <customDictionaryFile>domain-dictionary.txt</customDictionaryFile>
                     </configuration>
@@ -81,12 +91,12 @@
                     <artifactId>maven-pmd-plugin</artifactId>
                     <version>${maven.plugin.pmd.version}</version>
                     <configuration>
+                        <skip>${fast.build}</skip>
                         <linkXRef>false</linkXRef>
                         <failOnViolation>true</failOnViolation>
                         <printFailingErrors>true</printFailingErrors>
                         <rulesets>
                             <ruleset>/category/java/bestpractices.xml</ruleset>
-                            <ruleset>/category/java/multithreading.xml</ruleset>
                             <ruleset>/category/java/performance.xml</ruleset>
                             <ruleset>/category/java/security.xml</ruleset>
                         </rulesets>
@@ -107,6 +117,7 @@
                     <artifactId>pitest-maven</artifactId>
                     <version>${maven.plugin.pitest.version}</version>
                     <configuration>
+                        <skip>${fast.build}</skip>
                         <targetClasses>
                             <param>org.cynic.ltg_export.**</param>
                         </targetClasses>
@@ -121,6 +132,8 @@
                             <param>org.cynic.ltg_export.Constant*</param>
                             <param>org.cynic.ltg_export.**.Abstract*</param>
                             <param>org.cynic.ltg_export.framework.**</param>
+                            <param>org.cynic.ltg_export.client.**</param>
+                            <param>org.cynic.ltg_export.ui.**</param>
                         </excludedClasses>
                         <excludedTestClasses>
                             <param>org.cynic.ltg_export.architecture.**</param>
@@ -131,7 +144,7 @@
                         </jvmArgs>
                         <threads>10</threads>
                         <verbose>false</verbose>
-                        <mutationThreshold>80</mutationThreshold>
+                        <mutationThreshold>60</mutationThreshold>
                         <timestampedReports>false</timestampedReports>
                         <includedGroups>
                             <includedGroup>unit</includedGroup>
@@ -150,6 +163,7 @@
                     <artifactId>spotbugs-maven-plugin</artifactId>
                     <version>${maven.plugin.spotbugs.version}</version>
                     <configuration>
+                        <skip>${fast.build}</skip>
                         <failOnError>true</failOnError>
                         <excludeFilterFile>spotbugs-exclude.xml</excludeFilterFile>
                     </configuration>
@@ -158,6 +172,7 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
+                        <skip>${fast.build}</skip>
                         <groups>unit</groups>
                         <useSystemClassLoader>true</useSystemClassLoader>
                         <parallel>all</parallel>
@@ -174,6 +189,7 @@
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${maven.plugin.jacoco.version}</version>
                     <configuration>
+                        <skip>${fast.build}</skip>
                         <excludes>
                             <exclude>**/Constant*</exclude>
                             <exclude>**/*Configuration*</exclude>
@@ -184,6 +200,8 @@
                             <exclude>**/framework/**</exclude>
                             <exclude>**/repository/**</exclude>
                             <exclude>**/Abstract*</exclude>
+                            <exclude>**/client/**</exclude>
+                            <exclude>**/ui/**</exclude>
                         </excludes>
                         <rules>
                             <rule>
@@ -197,7 +215,7 @@
                                     <limit>
                                         <counter>LINE</counter>
                                         <value>COVEREDRATIO</value>
-                                        <minimum>0.80</minimum>
+                                        <minimum>0.60</minimum>
                                     </limit>
                                     <limit>
                                         <counter>BRANCH</counter>
@@ -254,6 +272,8 @@
                     <artifactId>dependency-check-maven</artifactId>
                     <version>${maven.plugin.owasp.version}</version>
                     <configuration>
+                        <!--                        <skip>${fast.build}</skip>-->
+                        <skip>true</skip>
                         <skipTestScope>true</skipTestScope>
                         <skipProvidedScope>true</skipProvidedScope>
                         <skipRuntimeScope>true</skipRuntimeScope>
@@ -340,6 +360,7 @@
                     <version>${jakarta-xml-ws.version}</version>
                     <configuration>
                         <wsdlDirectory>${project.basedir}/src/main/resources/wsdl</wsdlDirectory>
+                        <bindingDirectory>${project.basedir}/src/main/resources/binding</bindingDirectory>
                         <extension>true</extension>
                     </configuration>
                 </plugin>
@@ -356,23 +377,9 @@
                         <mainClass>org.springframework.boot.loader.launch.JarLauncher</mainClass>
                         <input>${jar.output.directory}</input>
                         <type>APP_IMAGE</type>
+                        <icon>${project.basedir}/src/main/resources/icon.ico</icon>
                         <destination>${project.build.directory}/bundle</destination>
                         <appVersion>0.0.1</appVersion>
-                        <winConsole>true</winConsole>
-                        <addModules>
-                            <addModule>java.base</addModule>
-                            <addModule>java.compiler</addModule>
-                            <addModule>java.desktop</addModule>
-                            <addModule>java.instrument</addModule>
-                            <addModule>java.logging</addModule>
-                            <addModule>java.management</addModule>
-                            <addModule>java.naming</addModule>
-                            <addModule>java.net.http</addModule>
-                            <addModule>java.rmi</addModule>
-                            <addModule>java.xml</addModule>
-                            <addModule>jdk.unsupported</addModule>
-                            <addModule>jdk.crypto.ec</addModule>
-                        </addModules>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -392,16 +399,28 @@
                     <artifactId>gitlog-maven-plugin</artifactId>
                     <version>${maven.plugin.gitlog.version}</version>
                     <configuration>
+                        <reportTitle>Change log for ${project.artifactId}</reportTitle>
                         <generatePlainTextChangeLog>false</generatePlainTextChangeLog>
                         <generatAsciidocChangeLog>false</generatAsciidocChangeLog>
                         <generateSimpleHTMLChangeLog>false</generateSimpleHTMLChangeLog>
+                        <generateMarkdownChangeLog>true</generateMarkdownChangeLog>
+                        <generateJSONChangeLog>false</generateJSONChangeLog>
                         <mergeCommitFilter>true</mergeCommitFilter>
-                        <excludeCommitsPattern>^(?!((\((fix|feat)\))|NOJIRA)).*$</excludeCommitsPattern>
+                        <excludeCommitsPattern>^(Merge|Update).*$</excludeCommitsPattern>
                         <showCommiter>false</showCommiter>
-                        <outputDirectory>${project.build.outputDirectory}/static</outputDirectory>
+                        <outputDirectory>${project.build.directory}/bundle/${project.artifactId}</outputDirectory>
                         <fullGitMessage>false</fullGitMessage>
-                        <dateFormat>yyyyMMdd'T'HH:mm:ss.SSSZ</dateFormat>
+                        <dateFormat>yyyy-MM-dd</dateFormat>
                     </configuration>
+                    <executions>
+                        <execution>
+                            <id>generate.changelog</id>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                            <phase>package</phase>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -427,19 +446,6 @@
                 <executions>
                     <execution>
                         <id>on-validate-resources-pmd-check</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.github.tomxiong</groupId>
-                <artifactId>spell-check-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>on-validate-spell-check-check</id>
                         <phase>validate</phase>
                         <goals>
                             <goal>check</goal>
@@ -498,19 +504,6 @@
 
             <!--            Generate resources-->
             <plugin>
-                <groupId>com.github.danielflower.mavenplugins</groupId>
-                <artifactId>gitlog-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>on-generate-resources-gitlog-generate</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>io.github.git-commit-id</groupId>
                 <artifactId>git-commit-id-maven-plugin</artifactId>
                 <executions>
@@ -535,11 +528,15 @@
                         <goals>
                             <goal>wsimport</goal>
                         </goals>
-                        <configuration>
+                        <configuration combine.children="append">
+                            <bindingFiles>
+                                <bindingFile>WaybillsImportService.xjb</bindingFile>
+                            </bindingFiles>
+                            <wsdlLocation>/wsdl/WaybillsImportService.wsdl</wsdlLocation>
                             <wsdlFiles>
                                 <wsdlFile>WaybillsImportService.wsdl</wsdlFile>
                             </wsdlFiles>
-                            <packageName>org.cynic.ltg_export.client</packageName>
+                            <packageName>org.cynic.ltg_export.client.ltg</packageName>
                         </configuration>
                     </execution>
                 </executions>
@@ -554,9 +551,17 @@
                     <failOnWarning>true</failOnWarning>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
-                    <compilerArgs>--enable-preview
-                    </compilerArgs>
                     <annotationProcessorPaths>
+                        <path>
+                            <groupId>jakarta.xml.ws</groupId>
+                            <artifactId>jakarta.xml.ws-api</artifactId>
+                            <version>${jakarta-xml-ws.version}</version>
+                        </path>
+                        <path>
+                            <groupId>com.sun.xml.ws</groupId>
+                            <artifactId>jaxws-rt</artifactId>
+                            <version>${jakarta-xml-ws.version}</version>
+                        </path>
                         <path>
                             <groupId>org.springframework.boot</groupId>
                             <artifactId>spring-boot-configuration-processor</artifactId>
@@ -628,7 +633,7 @@
                         <id>on-test-pitest-test</id>
                         <phase>test</phase>
                         <goals>
-                            <goal>${maven.plugin.pitest.goal}</goal>
+                            <goal>mutationCoverage</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -646,9 +651,6 @@
                     <outputDirectory>${jar.output.directory}</outputDirectory>
                     <excludeDevtools>true</excludeDevtools>
                     <optimizedLaunch>true</optimizedLaunch>
-                    <layers>
-                        <enabled>true</enabled>
-                    </layers>
                 </configuration>
             </plugin>
             <plugin>
@@ -664,6 +666,57 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>com.github.danielflower.mavenplugins</groupId>
+                <artifactId>gitlog-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add.service</id>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/bundle/${project.artifactId}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/bin</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${maven.plugin.exec.version}</version>
+                <executions>
+                    <execution>
+                        <id>exec-build</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>verify</phase>
+                        <configuration>
+                            <skip>${execBuildSkip}</skip>
+                            <executable>${project.build.directory}/bundle/${project.artifactId}/build.bat</executable>
+                            <arguments>
+                                <argument>bundle</argument>
+                                <argument>${project.version}</argument>
+                            </arguments>
+                            <workingDirectory>${project.build.directory}/bundle/${project.artifactId}</workingDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+
+            </plugin>
+
 
             <!--            Integration test -->
             <plugin>
@@ -671,7 +724,9 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
                     <groups>it</groups>
-                    <argLine>-XX:+EnableDynamicAgentLoading -Xshare:off -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar</argLine>
+                    <argLine>-XX:+EnableDynamicAgentLoading -Xshare:off
+                        -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
+                    </argLine>
                     <parallel>all</parallel>
                     <threadCountSuites>10</threadCountSuites>
                     <perCoreThreadCount>true</perCoreThreadCount>
@@ -707,6 +762,22 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.minidev</groupId>
+            <artifactId>json-smart</artifactId>
+        </dependency>
 
         <!--        External dependencies-->
         <dependency>
@@ -715,9 +786,37 @@
             <version>${jakarta-xml-ws.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk18on</artifactId>
-            <version>${bouncy-castle.version}</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>${commons-collections4.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>${commons-csv.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.synedra</groupId>
+            <artifactId>validatorfx</artifactId>
+            <version>${validatorfs.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

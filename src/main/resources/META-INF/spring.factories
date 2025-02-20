@@ -1,6 +1,6 @@
 org.springframework.boot.env.EnvironmentPostProcessor=\
-  org.cynic.ltg_export.framework.environment.SecurityEnvironmentPostProcessor,\
   org.cynic.ltg_export.framework.environment.SingleActiveProfileEnvironmentPostProcessor,\
   org.cynic.ltg_export.framework.environment.SystemPropertiesEnvironmentPostProcessor
 org.springframework.context.ApplicationListener=\
-  org.cynic.ltg_export.framework.listener.PropertiesApplicationListener
+  org.cynic.ltg_export.framework.listener.PropertiesApplicationListener,\
+  org.cynic.ltg_export.framework.listener.StartApplicationListener

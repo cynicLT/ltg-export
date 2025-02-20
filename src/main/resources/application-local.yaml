@@ -2,5 +2,3 @@ webservice:
   ltg:
     waybills-import:
       endpoint: https://krovinyswstest.ltgkrovinys.lt/WaybillsService/WaybillsImportService.asmx
-      username: ws-balticcargoagent@ltg.lt
-      password: VglEmcQU41ApG9SoY7h

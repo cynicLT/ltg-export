@@ -19,7 +19,7 @@ Requirements for the commit message:
 3. After the first line, leave one blank line and provide explanation in form of list:
    - Why was this change necessary?
    - How does it address the issue?
-   - Any breaking changes?
+   - Where change was introduced?
 
 4. Use present tense
 

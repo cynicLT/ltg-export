@@ -16,8 +16,17 @@
     </Match>
     <Match>
         <And>
+            <Package name="~.*[.]client[.]?.*"/>
+            <Or>
+                <Bug pattern="EI_EXPOSE_REP2"/>
+                <Bug pattern="EI_EXPOSE_REP"/>
+                <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+            </Or>
+        </And>
+    </Match>
+    <Match>
+        <And>
             <Package name="~.*[.]domain[.]?.*"/>
-
             <Or>
                 <Bug pattern="UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD"/>
                 <Bug pattern="UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD"/>
@@ -25,7 +34,6 @@
                 <Bug pattern="EI_EXPOSE_REP"/>
                 <Bug pattern="DLS_DEAD_LOCAL_STORE"/>
                 <Bug pattern="NM_METHOD_NAMING_CONVENTION"/>
-
             </Or>
         </And>
     </Match>
