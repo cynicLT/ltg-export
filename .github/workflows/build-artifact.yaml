@@ -1,0 +1,40 @@
+name: 'Build Artifact'
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-java:
+    runs-on: windows-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+      - name: "Setup JDK"
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'temurin'
+      - name: 'Build application'
+        run: mvn clean verify -DexecBuildSkip=false
+      - name: "Read artifact ID from POM file"
+        id: artifactId
+        uses: mavrosxristoforos/get-xml-info@1.0
+        with:
+          xml-file: 'pom.xml'
+          xpath: "//*[local-name()='project']/*[local-name()='artifactId']"
+      - name: "Read version from POM file"
+        id: version
+        uses: mavrosxristoforos/get-xml-info@1.0
+        with:
+          xml-file: 'pom.xml'
+          xpath: "//*[local-name()='project']/*[local-name()='version']"
+      - name: 'Upload artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.artifactId.outputs.info }}-${{ steps.version.outputs.info }}
+          compression-level: 9
+          path: target/bundle/${{ steps.artifactId.outputs.info }}/bundle
+          overwrite: true
