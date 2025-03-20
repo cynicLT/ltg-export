@@ -1,0 +1,20 @@
+name: 'Release'
+
+on: [ workflow_dispatch ]
+
+jobs:
+  build-java:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+      - name: "Setup JDK"
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'temurin'
+      - name: 'Build application'
+        run: mvn gitflow:release

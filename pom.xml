@@ -36,7 +36,7 @@
         <maven.plugin.pmd.version>3.26.0</maven.plugin.pmd.version>
         <maven.plugin.asm.version>9.7.1</maven.plugin.asm.version>
         <maven.plugin.exec.version>3.5.0</maven.plugin.exec.version>
-
+        <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
 
         <maven.plugin.jpackage.version>1.6.6</maven.plugin.jpackage.version>
         <maven.plugin.snyk.version>2.3.0</maven.plugin.snyk.version>
@@ -244,7 +244,8 @@
                         <archive>
                             <addMavenDescriptor>false</addMavenDescriptor>
                             <manifestEntries>
-                                <Implementation-Version>${git.build.version}-${git.commit.id.abbrev}</Implementation-Version>
+                                <Implementation-Version>${git.build.version}-${git.commit.id.abbrev}
+                                </Implementation-Version>
                             </manifestEntries>
                         </archive>
                     </configuration>
@@ -380,6 +381,23 @@
                         <icon>${project.basedir}/src/main/resources/icon.ico</icon>
                         <destination>${project.build.directory}/bundle</destination>
                         <appVersion>0.0.1</appVersion>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.amashchenko.maven.plugin</groupId>
+                    <artifactId>gitflow-maven-plugin</artifactId>
+                    <version>${gitflow-maven-plugin.version}</version>
+                    <configuration>
+                        <installProject>false</installProject>
+                        <allowSnapshots>false</allowSnapshots>
+                        <pushRemote>true</pushRemote>
+                        <keepBranch>false</keepBranch>
+                        <verbose>true</verbose>
+                        <gitFlowConfig>
+                            <productionBranch>main</productionBranch>
+                            <developmentBranch>develop</developmentBranch>
+                            <releaseBranchPrefix>release/</releaseBranchPrefix>
+                        </gitFlowConfig>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -734,6 +752,10 @@
             </plugin>
 
             <!--            No phase -->
+            <plugin>
+                <groupId>com.amashchenko.maven.plugin</groupId>
+                <artifactId>gitflow-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
