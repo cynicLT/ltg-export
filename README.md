@@ -4,7 +4,7 @@
 This application exports KR99 and KR99 data from LTG into user defined CSV format.
 
 ## Installation
-Download latest version from releases and install (Windows only version).
+Download latest version from [releases](https://github.com/cynicLT/ltg-export/releases) and install (Windows only version).
 
 ## Configuration
 Default export contains two different exports for KR99 and KR52.
