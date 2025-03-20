@@ -1,0 +1,4 @@
+webservice:
+  ltg:
+    waybills-import:
+      endpoint: https://krovinyswstest.ltgkrovinys.lt/WaybillsService/WaybillsImportService.asmx

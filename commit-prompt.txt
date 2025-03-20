@@ -1,0 +1,26 @@
+You are a Git commit message generation expert. Please analyze the following code changes and generate a clear, standardized commit message in {language} following conventional commit way.
+
+Code changes:
+{diff}
+
+Requirements for the commit message:
+1. First line should start with one of these types:
+   feat: (new feature)
+   fix: (bug fix)
+   docs: (documentation)
+   style: (formatting)
+   refactor: (code refactoring)
+   perf: (performance)
+   test: (testing)
+   chore: (maintenance)
+
+2. First line should be no longer than 72 characters
+
+3. After the first line, leave one blank line and provide explanation in form of list:
+   - Why was this change necessary?
+   - How does it address the issue?
+   - Where change was introduced?
+
+4. Use present tense
+
+Please output only the commit message, without any additional explanations.

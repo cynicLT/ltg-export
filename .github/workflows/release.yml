@@ -1,0 +1,28 @@
+name: 'Release'
+
+on: [ workflow_dispatch ]
+
+env:
+  BOT_NAME: 'Git Bot'
+  BOT_EMAIL: bot@github.com
+
+jobs:
+  build-java:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+      - name: 'Configure Bot on Git'
+        run: |
+            git config user.name ${{ env.BOT_NAME }}
+            git config user.email ${{ env.BOT_EMAIL }}
+      - name: "Setup JDK"
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'temurin'
+      - name: 'Build application'
+        run: mvn gitflow:release

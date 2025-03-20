@@ -1,0 +1,876 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema"
+                  xmlns:tns="http://www.bluebridge.lt/krovinys/WaybillsService/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  targetNamespace="http://www.bluebridge.lt/krovinys/WaybillsService/">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Važtaraščių importas.</wsdl:documentation>
+    <wsdl:types>
+        <s:schema elementFormDefault="qualified" targetNamespace="http://www.bluebridge.lt/krovinys/WaybillsService/">
+            <s:element name="ImportInvoice">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="xmlInvoice" type="s:string"/>
+                        <s:element minOccurs="0"  name="ticket" type="s:string"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="ImportInvoiceResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ImportInvoiceResult" type="tns:MethodResultOfArrayOfInvoiceImportInfo"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="MethodResultOfArrayOfInvoiceImportInfo">
+                <s:complexContent mixed="false">
+                    <s:extension base="tns:ExecutionSummary">
+                        <s:sequence>
+                            <s:element minOccurs="0"  name="ReturnValue" type="tns:ArrayOfInvoiceImportInfo"/>
+                        </s:sequence>
+                    </s:extension>
+                </s:complexContent>
+            </s:complexType>
+            <s:complexType name="ExecutionSummary" abstract="true">
+                <s:sequence>
+                    <s:element  name="ExecutionResult" type="tns:ExecutionResult"/>
+                    <s:element minOccurs="0"  name="ExecutionDetails" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:simpleType name="ExecutionResult">
+                <s:restriction base="s:string">
+                    <s:enumeration value="Executed"/>
+                    <s:enumeration value="ExceptionOccured"/>
+                    <s:enumeration value="AuthenticationError"/>
+                    <s:enumeration value="AuthenticationExpired"/>
+                </s:restriction>
+            </s:simpleType>
+            <s:complexType name="ArrayOfInvoiceImportInfo">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="InvoiceImportInfo" nillable="true" type="tns:InvoiceImportInfo"/>
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="InvoiceImportInfo">
+                <s:sequence>
+                    <s:element  name="Id" type="s:int"/>
+                    <s:element minOccurs="0"  name="Numeris" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="ImportWaybill">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="xmlWaybill" type="s:string"/>
+                        <s:element minOccurs="0"  name="ticket" type="s:string"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="ImportWaybillResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ImportWaybillResult" type="tns:MethodResultOfArrayOfWaybillImportInfo"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="MethodResultOfArrayOfWaybillImportInfo">
+                <s:complexContent mixed="false">
+                    <s:extension base="tns:ExecutionSummary">
+                        <s:sequence>
+                            <s:element minOccurs="0"  name="ReturnValue" type="tns:ArrayOfWaybillImportInfo"/>
+                        </s:sequence>
+                    </s:extension>
+                </s:complexContent>
+            </s:complexType>
+            <s:complexType name="ArrayOfWaybillImportInfo">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="WaybillImportInfo" nillable="true" type="tns:WaybillImportInfo"/>
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="WaybillImportInfo">
+                <s:sequence>
+                    <s:element  name="Id" type="s:int"/>
+                    <s:element minOccurs="0"  name="Numeris" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="ExportSF">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ticket" type="s:string"/>
+                        <s:element minOccurs="0"  name="mokestinisPeriodas" type="s:string"/>
+                        <s:element  name="formavimoDataNuo" nillable="true" type="s:dateTime"/>
+                        <s:element  name="formavimoDataIki" nillable="true" type="s:dateTime"/>
+                        <s:element minOccurs="0"  name="sfNumeris" type="s:string"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="ExportSFResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ExportSFResult" type="tns:MethodResultOfArrayOfExportListItem"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="MethodResultOfArrayOfExportListItem">
+                <s:complexContent mixed="false">
+                    <s:extension base="tns:ExecutionSummary">
+                        <s:sequence>
+                            <s:element minOccurs="0"  name="ReturnValue" type="tns:ArrayOfExportListItem"/>
+                        </s:sequence>
+                    </s:extension>
+                </s:complexContent>
+            </s:complexType>
+            <s:complexType name="ArrayOfExportListItem">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="ExportListItem" nillable="true" type="tns:ExportListItem"/>
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="ExportListItem">
+                <s:sequence>
+                    <s:element  name="ID" type="s:int"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="ExportWaybillKR99">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ticket" type="s:string"/>
+                        <s:element minOccurs="0"  name="mokestinisPeriodas" type="s:string"/>
+                        <s:element  name="KeitimoDataNuo" nillable="true" type="s:dateTime"/>
+                        <s:element  name="KeitimoDataIki" nillable="true" type="s:dateTime"/>
+                        <s:element minOccurs="0"  name="SisteminisNr" type="s:string"/>
+                        <s:element  name="SiuntimoData" nillable="true" type="s:dateTime"/>
+                        <s:element  name="IsvykimoDataNuo" nillable="true" type="s:dateTime"/>
+                        <s:element  name="IsvykimoDataIki" nillable="true" type="s:dateTime"/>
+                        <s:element  name="AtvykimoDataNuo" nillable="true" type="s:dateTime"/>
+                        <s:element  name="AtvykimoDataIki" nillable="true" type="s:dateTime"/>
+                        <s:element minOccurs="0"  name="Numeris" type="s:string"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="ExportWaybillKR99Response">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ExportWaybillKR99Result" type="tns:MethodResultOfArrayOfExportListItem"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="ExportWaybillNumbers">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ticket" type="s:string"/>
+                        <s:element minOccurs="0"  name="externalIds" type="tns:ArrayOfString"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="ArrayOfString">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="ExportWaybillNumbersResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ExportWaybillNumbersResult" type="tns:MethodResultOfArrayOfNumberInfoItem"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="MethodResultOfArrayOfNumberInfoItem">
+                <s:complexContent mixed="false">
+                    <s:extension base="tns:ExecutionSummary">
+                        <s:sequence>
+                            <s:element minOccurs="0"  name="ReturnValue" type="tns:ArrayOfNumberInfoItem"/>
+                        </s:sequence>
+                    </s:extension>
+                </s:complexContent>
+            </s:complexType>
+            <s:complexType name="ArrayOfNumberInfoItem">
+                <s:sequence>
+                    <s:element minOccurs="0" maxOccurs="unbounded" name="NumberInfoItem" nillable="true" type="tns:NumberInfoItem"/>
+                </s:sequence>
+            </s:complexType>
+            <s:complexType name="NumberInfoItem">
+                <s:sequence>
+                    <s:element minOccurs="0"  name="ExternalID" type="s:string"/>
+                    <s:element minOccurs="0"  name="Number" type="s:string"/>
+                    <s:element minOccurs="0"  name="NumberUnconfirmed" type="s:string"/>
+                    <s:element  name="Deleted" type="s:boolean"/>
+                </s:sequence>
+            </s:complexType>
+            <s:element name="ExportWaybillKR52">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ticket" type="s:string"/>
+                        <s:element minOccurs="0"  name="mokestinisPeriodas" type="s:string"/>
+                        <s:element  name="KeitimoDataNuo" nillable="true" type="s:dateTime"/>
+                        <s:element  name="KeitimoDataIki" nillable="true" type="s:dateTime"/>
+                        <s:element minOccurs="0"  name="SisteminisNr" type="s:string"/>
+                        <s:element  name="SiuntimoData" nillable="true" type="s:dateTime"/>
+                        <s:element  name="IsvykimoDataNuo" nillable="true" type="s:dateTime"/>
+                        <s:element  name="IsvykimoDataIki" nillable="true" type="s:dateTime"/>
+                        <s:element  name="AtvykimoDataNuo" nillable="true" type="s:dateTime"/>
+                        <s:element  name="AtvykimoDataIki" nillable="true" type="s:dateTime"/>
+                        <s:element minOccurs="0"  name="Numeris" type="s:string"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="ExportWaybillKR52Response">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ExportWaybillKR52Result" type="tns:MethodResultOfArrayOfExportListItem"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="ExportWaybillKR99Item">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ticket" type="s:string"/>
+                        <s:element  name="vaztaraztisID" type="s:int"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="ExportWaybillKR99ItemResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ExportWaybillKR99ItemResult" type="tns:MethodResultOfString"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="MethodResultOfString">
+                <s:complexContent mixed="false">
+                    <s:extension base="tns:ExecutionSummary">
+                        <s:sequence>
+                            <s:element minOccurs="0"  name="ReturnValue" type="s:string"/>
+                        </s:sequence>
+                    </s:extension>
+                </s:complexContent>
+            </s:complexType>
+            <s:element name="ExportWaybillKR52Item">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ticket" type="s:string"/>
+                        <s:element  name="vaztaraztisID" type="s:int"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="ExportWaybillKR52ItemResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ExportWaybillKR52ItemResult" type="tns:MethodResultOfString"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="ExportSfItem">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ticket" type="s:string"/>
+                        <s:element  name="sfID" type="s:int"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="ExportSfItemResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ExportSfItemResult" type="tns:MethodResultOfString"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetWaybillXMLSchema">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ticket" type="s:string"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetWaybillXMLSchemaResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="GetWaybillXMLSchemaResult" type="tns:MethodResultOfString"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetInvoiceXMLSchema">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ticket" type="s:string"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetInvoiceXMLSchemaResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="GetInvoiceXMLSchemaResult" type="tns:MethodResultOfString"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetWaybillXMLExportSchema">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ticket" type="s:string"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetWaybillXMLExportSchemaResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="GetWaybillXMLExportSchemaResult" type="tns:MethodResultOfString"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetSfXMLExportSchema">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ticket" type="s:string"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetSfXMLExportSchemaResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="GetSfXMLExportSchemaResult" type="tns:MethodResultOfString"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetKr12Kr53XmlExportSchema">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ticket" type="s:string"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetKr12Kr53XmlExportSchemaResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="GetKr12Kr53XmlExportSchemaResult" type="tns:MethodResultOfString"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="ValidateXMLWaybill">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="xmlWaybill" type="s:string"/>
+                        <s:element minOccurs="0"  name="ticket" type="s:string"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="ValidateXMLWaybillResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ValidateXMLWaybillResult" type="tns:MethodResultOfBoolean"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:complexType name="MethodResultOfBoolean">
+                <s:complexContent mixed="false">
+                    <s:extension base="tns:ExecutionSummary">
+                        <s:sequence>
+                            <s:element  name="ReturnValue" type="s:boolean"/>
+                        </s:sequence>
+                    </s:extension>
+                </s:complexContent>
+            </s:complexType>
+            <s:element name="ValidateXMLInvoice">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="xmlInvoice" type="s:string"/>
+                        <s:element minOccurs="0"  name="ticket" type="s:string"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="ValidateXMLInvoiceResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ValidateXMLInvoiceResult" type="tns:MethodResultOfBoolean"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetTicket">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="username" type="s:string"/>
+                        <s:element minOccurs="0"  name="password" type="s:string"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetTicketResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="GetTicketResult" type="tns:MethodResultOfString"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetVersion">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ticket" type="s:string"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="GetVersionResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="GetVersionResult" type="tns:MethodResultOfString"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="ExportKr53Kr12Item">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ticket" type="s:string"/>
+                        <s:element  name="kr53Kr12Id" type="s:int"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="ExportKr53Kr12ItemResponse">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ExportKr53Kr12ItemResult" type="tns:MethodResultOfString"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="ExportKr53Kr12">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ticket" type="s:string"/>
+                        <s:element minOccurs="0"  name="mokestinisPeriodas" type="s:string"/>
+                        <s:element  name="keitimoDataNuo" nillable="true" type="s:dateTime"/>
+                        <s:element  name="keitimoDataIki" nillable="true" type="s:dateTime"/>
+                        <s:element minOccurs="0"  name="numeris" type="s:string"/>
+                        <s:element minOccurs="0"  name="tipas" type="s:string"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="ExportKr53Kr12Response">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element minOccurs="0"  name="ExportKr53Kr12Result" type="tns:MethodResultOfArrayOfExportListItem"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="MethodResultOfArrayOfInvoiceImportInfo" nillable="true" type="tns:MethodResultOfArrayOfInvoiceImportInfo"/>
+            <s:element name="MethodResultOfArrayOfWaybillImportInfo" nillable="true" type="tns:MethodResultOfArrayOfWaybillImportInfo"/>
+            <s:element name="MethodResultOfString" nillable="true" type="tns:MethodResultOfString"/>
+            <s:element name="MethodResultOfBoolean" nillable="true" type="tns:MethodResultOfBoolean"/>
+        </s:schema>
+    </wsdl:types>
+    <wsdl:message name="ImportInvoiceSoapIn">
+        <wsdl:part name="parameters" element="tns:ImportInvoice"/>
+    </wsdl:message>
+    <wsdl:message name="ImportInvoiceSoapOut">
+        <wsdl:part name="parameters" element="tns:ImportInvoiceResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ImportWaybillSoapIn">
+        <wsdl:part name="parameters" element="tns:ImportWaybill"/>
+    </wsdl:message>
+    <wsdl:message name="ImportWaybillSoapOut">
+        <wsdl:part name="parameters" element="tns:ImportWaybillResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ExportSFSoapIn">
+        <wsdl:part name="parameters" element="tns:ExportSF"/>
+    </wsdl:message>
+    <wsdl:message name="ExportSFSoapOut">
+        <wsdl:part name="parameters" element="tns:ExportSFResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ExportWaybillKR99SoapIn">
+        <wsdl:part name="parameters" element="tns:ExportWaybillKR99"/>
+    </wsdl:message>
+    <wsdl:message name="ExportWaybillKR99SoapOut">
+        <wsdl:part name="parameters" element="tns:ExportWaybillKR99Response"/>
+    </wsdl:message>
+    <wsdl:message name="ExportWaybillNumbersSoapIn">
+        <wsdl:part name="parameters" element="tns:ExportWaybillNumbers"/>
+    </wsdl:message>
+    <wsdl:message name="ExportWaybillNumbersSoapOut">
+        <wsdl:part name="parameters" element="tns:ExportWaybillNumbersResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ExportWaybillKR52SoapIn">
+        <wsdl:part name="parameters" element="tns:ExportWaybillKR52"/>
+    </wsdl:message>
+    <wsdl:message name="ExportWaybillKR52SoapOut">
+        <wsdl:part name="parameters" element="tns:ExportWaybillKR52Response"/>
+    </wsdl:message>
+    <wsdl:message name="ExportWaybillKR99ItemSoapIn">
+        <wsdl:part name="parameters" element="tns:ExportWaybillKR99Item"/>
+    </wsdl:message>
+    <wsdl:message name="ExportWaybillKR99ItemSoapOut">
+        <wsdl:part name="parameters" element="tns:ExportWaybillKR99ItemResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ExportWaybillKR52ItemSoapIn">
+        <wsdl:part name="parameters" element="tns:ExportWaybillKR52Item"/>
+    </wsdl:message>
+    <wsdl:message name="ExportWaybillKR52ItemSoapOut">
+        <wsdl:part name="parameters" element="tns:ExportWaybillKR52ItemResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ExportSfItemSoapIn">
+        <wsdl:part name="parameters" element="tns:ExportSfItem"/>
+    </wsdl:message>
+    <wsdl:message name="ExportSfItemSoapOut">
+        <wsdl:part name="parameters" element="tns:ExportSfItemResponse"/>
+    </wsdl:message>
+    <wsdl:message name="GetWaybillXMLSchemaSoapIn">
+        <wsdl:part name="parameters" element="tns:GetWaybillXMLSchema"/>
+    </wsdl:message>
+    <wsdl:message name="GetWaybillXMLSchemaSoapOut">
+        <wsdl:part name="parameters" element="tns:GetWaybillXMLSchemaResponse"/>
+    </wsdl:message>
+    <wsdl:message name="GetInvoiceXMLSchemaSoapIn">
+        <wsdl:part name="parameters" element="tns:GetInvoiceXMLSchema"/>
+    </wsdl:message>
+    <wsdl:message name="GetInvoiceXMLSchemaSoapOut">
+        <wsdl:part name="parameters" element="tns:GetInvoiceXMLSchemaResponse"/>
+    </wsdl:message>
+    <wsdl:message name="GetWaybillXMLExportSchemaSoapIn">
+        <wsdl:part name="parameters" element="tns:GetWaybillXMLExportSchema"/>
+    </wsdl:message>
+    <wsdl:message name="GetWaybillXMLExportSchemaSoapOut">
+        <wsdl:part name="parameters" element="tns:GetWaybillXMLExportSchemaResponse"/>
+    </wsdl:message>
+    <wsdl:message name="GetSfXMLExportSchemaSoapIn">
+        <wsdl:part name="parameters" element="tns:GetSfXMLExportSchema"/>
+    </wsdl:message>
+    <wsdl:message name="GetSfXMLExportSchemaSoapOut">
+        <wsdl:part name="parameters" element="tns:GetSfXMLExportSchemaResponse"/>
+    </wsdl:message>
+    <wsdl:message name="GetKr12Kr53XmlExportSchemaSoapIn">
+        <wsdl:part name="parameters" element="tns:GetKr12Kr53XmlExportSchema"/>
+    </wsdl:message>
+    <wsdl:message name="GetKr12Kr53XmlExportSchemaSoapOut">
+        <wsdl:part name="parameters" element="tns:GetKr12Kr53XmlExportSchemaResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ValidateXMLWaybillSoapIn">
+        <wsdl:part name="parameters" element="tns:ValidateXMLWaybill"/>
+    </wsdl:message>
+    <wsdl:message name="ValidateXMLWaybillSoapOut">
+        <wsdl:part name="parameters" element="tns:ValidateXMLWaybillResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ValidateXMLInvoiceSoapIn">
+        <wsdl:part name="parameters" element="tns:ValidateXMLInvoice"/>
+    </wsdl:message>
+    <wsdl:message name="ValidateXMLInvoiceSoapOut">
+        <wsdl:part name="parameters" element="tns:ValidateXMLInvoiceResponse"/>
+    </wsdl:message>
+    <wsdl:message name="GetTicketSoapIn">
+        <wsdl:part name="parameters" element="tns:GetTicket"/>
+    </wsdl:message>
+    <wsdl:message name="GetTicketSoapOut">
+        <wsdl:part name="parameters" element="tns:GetTicketResponse"/>
+    </wsdl:message>
+    <wsdl:message name="GetVersionSoapIn">
+        <wsdl:part name="parameters" element="tns:GetVersion"/>
+    </wsdl:message>
+    <wsdl:message name="GetVersionSoapOut">
+        <wsdl:part name="parameters" element="tns:GetVersionResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ExportKr53Kr12ItemSoapIn">
+        <wsdl:part name="parameters" element="tns:ExportKr53Kr12Item"/>
+    </wsdl:message>
+    <wsdl:message name="ExportKr53Kr12ItemSoapOut">
+        <wsdl:part name="parameters" element="tns:ExportKr53Kr12ItemResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ExportKr53Kr12SoapIn">
+        <wsdl:part name="parameters" element="tns:ExportKr53Kr12"/>
+    </wsdl:message>
+    <wsdl:message name="ExportKr53Kr12SoapOut">
+        <wsdl:part name="parameters" element="tns:ExportKr53Kr12Response"/>
+    </wsdl:message>
+    <wsdl:message name="GetVersionHttpPostOut">
+        <wsdl:part name="Body" element="tns:MethodResultOfString"/>
+    </wsdl:message>
+    <wsdl:message name="ExportKr53Kr12ItemHttpPostIn">
+        <wsdl:part name="ticket" type="s:string"/>
+        <wsdl:part name="kr53Kr12Id" type="s:string"/>
+    </wsdl:message>
+    <wsdl:message name="ExportKr53Kr12ItemHttpPostOut">
+        <wsdl:part name="Body" element="tns:MethodResultOfString"/>
+    </wsdl:message>
+    <wsdl:portType name="WaybillsImportServiceSoap">
+        <wsdl:operation name="ImportInvoice">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Invoice importo metodas.</wsdl:documentation>
+            <wsdl:input message="tns:ImportInvoiceSoapIn"/>
+            <wsdl:output message="tns:ImportInvoiceSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="ImportWaybill">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Važtaraščių importo metodas.</wsdl:documentation>
+            <wsdl:input message="tns:ImportWaybillSoapIn"/>
+            <wsdl:output message="tns:ImportWaybillSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="ExportSF">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">SF eksporto metodas.</wsdl:documentation>
+            <wsdl:input message="tns:ExportSFSoapIn"/>
+            <wsdl:output message="tns:ExportSFSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="ExportWaybillKR99">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Važtaraščių KR99 eksporto metodas.</wsdl:documentation>
+            <wsdl:input message="tns:ExportWaybillKR99SoapIn"/>
+            <wsdl:output message="tns:ExportWaybillKR99SoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="ExportWaybillNumbers">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Važtaraščių numerių sąrašo paėmimo pagal išorinius ID metodas.
+            </wsdl:documentation>
+            <wsdl:input message="tns:ExportWaybillNumbersSoapIn"/>
+            <wsdl:output message="tns:ExportWaybillNumbersSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="ExportWaybillKR52">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Važtaraščių KR52 eksporto metodas.</wsdl:documentation>
+            <wsdl:input message="tns:ExportWaybillKR52SoapIn"/>
+            <wsdl:output message="tns:ExportWaybillKR52SoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="ExportWaybillKR99Item">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Važtaraščio KR99 įrašo eksporto metodas.</wsdl:documentation>
+            <wsdl:input message="tns:ExportWaybillKR99ItemSoapIn"/>
+            <wsdl:output message="tns:ExportWaybillKR99ItemSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="ExportWaybillKR52Item">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Važtaraščio KR52 įrašo eksporto metodas.</wsdl:documentation>
+            <wsdl:input message="tns:ExportWaybillKR52ItemSoapIn"/>
+            <wsdl:output message="tns:ExportWaybillKR52ItemSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="ExportSfItem">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">SF įrašo eksporto metodas.</wsdl:documentation>
+            <wsdl:input message="tns:ExportSfItemSoapIn"/>
+            <wsdl:output message="tns:ExportSfItemSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetWaybillXMLSchema">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gauti važtaraščių importo XML failų schemą.</wsdl:documentation>
+            <wsdl:input message="tns:GetWaybillXMLSchemaSoapIn"/>
+            <wsdl:output message="tns:GetWaybillXMLSchemaSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetInvoiceXMLSchema">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gauti invoice importo XML failų schemą.</wsdl:documentation>
+            <wsdl:input message="tns:GetInvoiceXMLSchemaSoapIn"/>
+            <wsdl:output message="tns:GetInvoiceXMLSchemaSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetWaybillXMLExportSchema">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gauti važtaraščių eksporto XML failų schemą.</wsdl:documentation>
+            <wsdl:input message="tns:GetWaybillXMLExportSchemaSoapIn"/>
+            <wsdl:output message="tns:GetWaybillXMLExportSchemaSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetSfXMLExportSchema">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gauti SF eksporto XML failų schemą.</wsdl:documentation>
+            <wsdl:input message="tns:GetSfXMLExportSchemaSoapIn"/>
+            <wsdl:output message="tns:GetSfXMLExportSchemaSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetKr12Kr53XmlExportSchema">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gauti KR-12 ir KR-53 eksporto XML failų schemą.</wsdl:documentation>
+            <wsdl:input message="tns:GetKr12Kr53XmlExportSchemaSoapIn"/>
+            <wsdl:output message="tns:GetKr12Kr53XmlExportSchemaSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="ValidateXMLWaybill">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Patikrinti važtaraščių XML failą.</wsdl:documentation>
+            <wsdl:input message="tns:ValidateXMLWaybillSoapIn"/>
+            <wsdl:output message="tns:ValidateXMLWaybillSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="ValidateXMLInvoice">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Patikrinti invoice XML failą.</wsdl:documentation>
+            <wsdl:input message="tns:ValidateXMLInvoiceSoapIn"/>
+            <wsdl:output message="tns:ValidateXMLInvoiceSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetTicket">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Generuoti mandatą. Turi būti kviečiamas prieš kviečiant kitus metodus.
+            </wsdl:documentation>
+            <wsdl:input message="tns:GetTicketSoapIn"/>
+            <wsdl:output message="tns:GetTicketSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetVersion">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gauti webserviso versijos numerį.</wsdl:documentation>
+            <wsdl:input message="tns:GetVersionSoapIn"/>
+            <wsdl:output message="tns:GetVersionSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="ExportKr53Kr12Item">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">KR12 arba KR53 įrašo eksporto metodas.</wsdl:documentation>
+            <wsdl:input message="tns:ExportKr53Kr12ItemSoapIn"/>
+            <wsdl:output message="tns:ExportKr53Kr12ItemSoapOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="ExportKr53Kr12">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">PP dokumentų KR53 ir KR12 eksporto metodas.</wsdl:documentation>
+            <wsdl:input message="tns:ExportKr53Kr12SoapIn"/>
+            <wsdl:output message="tns:ExportKr53Kr12SoapOut"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="WaybillsImportServiceSoap" type="tns:WaybillsImportServiceSoap">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="ImportInvoice">
+            <soap:operation soapAction="http://www.bluebridge.lt/krovinys/WaybillsService/ImportInvoice" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ImportWaybill">
+            <soap:operation soapAction="http://www.bluebridge.lt/krovinys/WaybillsService/ImportWaybill" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ExportSF">
+            <soap:operation soapAction="http://www.bluebridge.lt/krovinys/WaybillsService/ExportSF" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ExportWaybillKR99">
+            <soap:operation soapAction="http://www.bluebridge.lt/krovinys/WaybillsService/ExportWaybillKR99" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ExportWaybillNumbers">
+            <soap:operation soapAction="http://www.bluebridge.lt/krovinys/WaybillsService/ExportWaybillNumbers" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ExportWaybillKR52">
+            <soap:operation soapAction="http://www.bluebridge.lt/krovinys/WaybillsService/ExportWaybillKR52" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ExportWaybillKR99Item">
+            <soap:operation soapAction="http://www.bluebridge.lt/krovinys/WaybillsService/ExportWaybillKR99Item" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ExportWaybillKR52Item">
+            <soap:operation soapAction="http://www.bluebridge.lt/krovinys/WaybillsService/ExportWaybillKR52Item" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ExportSfItem">
+            <soap:operation soapAction="http://www.bluebridge.lt/krovinys/WaybillsService/ExportSfItem" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetWaybillXMLSchema">
+            <soap:operation soapAction="http://www.bluebridge.lt/krovinys/WaybillsService/GetWaybillXMLSchema" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetInvoiceXMLSchema">
+            <soap:operation soapAction="http://www.bluebridge.lt/krovinys/WaybillsService/GetInvoiceXMLSchema" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetWaybillXMLExportSchema">
+            <soap:operation soapAction="http://www.bluebridge.lt/krovinys/WaybillsService/GetWaybillXMLExportSchema" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetSfXMLExportSchema">
+            <soap:operation soapAction="http://www.bluebridge.lt/krovinys/WaybillsService/GetSfXMLExportSchema" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetKr12Kr53XmlExportSchema">
+            <soap:operation soapAction="http://www.bluebridge.lt/krovinys/WaybillsService/GetKr12Kr53XmlExportSchema" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ValidateXMLWaybill">
+            <soap:operation soapAction="http://www.bluebridge.lt/krovinys/WaybillsService/ValidateXMLWaybill" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ValidateXMLInvoice">
+            <soap:operation soapAction="http://www.bluebridge.lt/krovinys/WaybillsService/ValidateXMLInvoice" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetTicket">
+            <soap:operation soapAction="http://www.bluebridge.lt/krovinys/WaybillsService/GetTicket" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetVersion">
+            <soap:operation soapAction="http://www.bluebridge.lt/krovinys/WaybillsService/GetVersion" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ExportKr53Kr12Item">
+            <soap:operation soapAction="http://www.bluebridge.lt/krovinys/WaybillsService/ExportKr53Kr12Item" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ExportKr53Kr12">
+            <soap:operation soapAction="http://www.bluebridge.lt/krovinys/WaybillsService/ExportKr53Kr12" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="WaybillsImportService">
+        <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Važtaraščių importas.</wsdl:documentation>
+        <wsdl:port name="WaybillsImportServiceSoap" binding="tns:WaybillsImportServiceSoap">
+            <soap:address location="https://krovinyswstest.ltgkrovinys.lt:4437/WaybillsService/WaybillsImportService.asmx"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

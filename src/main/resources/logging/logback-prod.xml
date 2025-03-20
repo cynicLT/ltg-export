@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+    <!--    File-->
+    <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="file">
+        <file>data/logs/${spring.application.name}.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>data/logs/${spring.application.name}-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <maxHistory>10</maxHistory>
+            <maxFileSize>10MB</maxFileSize>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!--    Async -->
+    <appender class="ch.qos.logback.classic.AsyncAppender" name="asyncFile">
+        <appender-ref ref="file"/>
+    </appender>
+
+
+    <logger level="INFO" name="org.cynic.ltg_export">
+        <appender-ref ref="asyncFile"/>
+    </logger>
+
+    <root level="ERROR">
+        <appender-ref ref="asyncFile"/>
+    </root>
+</included>

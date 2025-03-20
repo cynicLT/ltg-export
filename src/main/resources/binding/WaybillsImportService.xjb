@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jaxb:bindings
+    xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    jaxb:version="3.0">
+    <jaxb:globalBindings>
+        <jaxb:javaType name="java.time.LocalDate"
+                       xmlType="xs:dateTime"
+                       parseMethod="org.cynic.ltg_export.framework.binding.LocalDateConverter.parse"
+                       printMethod="org.cynic.ltg_export.framework.binding.LocalDateConverter.format"/>
+        <jaxb:serializable uid="1"/>
+    </jaxb:globalBindings>
+</jaxb:bindings>

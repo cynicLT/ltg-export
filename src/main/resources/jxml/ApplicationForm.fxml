@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<StackPane xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="org.cynic.ltg_export.ui.ApplicationForm">
+    <VBox prefHeight="650.0" prefWidth="360.0" spacing="20" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0"
+          AnchorPane.topAnchor="20.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+
+        <GridPane hgap="10.0" vgap="10.0">
+            <!-- Login and language -->
+            <Label text="%login.username" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <PasswordField fx:id="username" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+            <Label text="%login.password" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <PasswordField fx:id="password" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+
+            <Label text="%file" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            <TextField fx:id="file" GridPane.columnIndex="2" GridPane.rowIndex="3" disable="true"/>
+            <Button fx:id="browse" GridPane.columnIndex="3" GridPane.rowIndex="3" text="%browse" onAction="#onBroseAction"/>
+
+            <Label text="%login.remember-me" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+            <CheckBox fx:id="rememberMe" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+
+            <!-- Filter -->
+            <Label text="%filter.payment-period" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+            <TextField fx:id="paymentPeriod" promptText="yyyy-MM" GridPane.columnIndex="2" GridPane.rowIndex="7"/>
+
+            <Label text="%filter.change-date-from" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+            <DatePicker fx:id="changeDateFrom" promptText="yyyy-MM-dd" GridPane.columnIndex="2" GridPane.rowIndex="8" editable="false"/>
+
+            <Label text="%filter.change-date-to" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+            <DatePicker fx:id="changeDateTo" promptText="yyyy-MM-dd" GridPane.columnIndex="2" GridPane.rowIndex="9" editable="false"/>
+
+            <Label text="%filter.system-number" GridPane.columnIndex="1" GridPane.rowIndex="10"/>
+            <TextField fx:id="systemNumber" GridPane.columnIndex="2" GridPane.rowIndex="10"/>
+
+            <Label text="%filter.send-date" GridPane.columnIndex="1" GridPane.rowIndex="11"/>
+            <DatePicker fx:id="sendDate" promptText="yyyy-MM-dd" GridPane.columnIndex="2" GridPane.rowIndex="11" editable="false"/>
+
+            <Label text="%filter.departure-date-from" GridPane.columnIndex="1" GridPane.rowIndex="12"/>
+            <DatePicker fx:id="departureDateFrom" promptText="yyyy-MM-dd" GridPane.columnIndex="2" GridPane.rowIndex="12" editable="false"/>
+
+            <Label text="%filter.departure-date-to" GridPane.columnIndex="1" GridPane.rowIndex="13"/>
+            <DatePicker fx:id="departureDateTo" promptText="yyyy-MM-dd" GridPane.columnIndex="2" GridPane.rowIndex="13" editable="false"/>
+
+            <Label text="%filter.arrival-date-from" GridPane.columnIndex="1" GridPane.rowIndex="14"/>
+            <DatePicker fx:id="arrivalDateFrom" promptText="yyyy-MM-dd" GridPane.columnIndex="2" GridPane.rowIndex="14" editable="false"/>
+
+            <Label text="%filter.arrival-date-to" GridPane.columnIndex="1" GridPane.rowIndex="15"/>
+            <DatePicker fx:id="arrivalDateTo" promptText="yyyy-MM-dd" GridPane.columnIndex="2" GridPane.rowIndex="15" editable="false"/>
+
+            <Label text="%filter.number" GridPane.columnIndex="1" GridPane.rowIndex="16"/>
+            <TextField fx:id="number" GridPane.columnIndex="2" GridPane.rowIndex="16"/>
+
+            <!-- Export type -->
+            <Label text="%filter.name" GridPane.columnIndex="1" GridPane.rowIndex="18"/>
+            <ChoiceBox fx:id="name" GridPane.columnIndex="2" GridPane.rowIndex="18"/>
+
+            <!-- Action -->
+            <Button fx:id="export" onAction="#onExportAction" text="%export" GridPane.columnIndex="1" GridPane.rowIndex="20"/>
+        </GridPane>
+    </VBox>
+
+    <Pane fx:id="modal" style="-fx-background-color: rgba(0, 0, 0, 0.5);"
+          visible="false" StackPane.alignment="CENTER">
+    </Pane>
+</StackPane>

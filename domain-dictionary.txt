@@ -1,0 +1,6 @@
+webservice
+ltg
+servicename
+bluebridge
+wsdl
+endpointinterface

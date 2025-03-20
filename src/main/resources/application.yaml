@@ -1,15 +1,24 @@
-# LTG Export
+spring:
+  profiles:
+    active: prod
+  application:
+    name: ltg-export
+  main:
+    log-startup-info: true
+    web-application-type: none
+    banner-mode: off
+  threads:
+    virtual:
+      enabled: true
+  jackson:
+    default-property-inclusion: non_empty
+    serialization:
+      close-closeable: true
+    deserialization:
+      fail-on-unknown-properties: false
+      adjust-dates-to-context-time-zone: false
+    time-zone: UTC
 
-## About
-This application exports KR99 and KR99 data from LTG into user defined CSV format.
-
-## Installation
-Download latest version from [releases](https://github.com/cynicLT/ltg-export/releases) and install (Windows only version).
-
-## Configuration
-Default export contains two different exports for KR99 and KR52.
-
-```yaml
 export:
   - name: KR99_Default
     type: KR99
@@ -131,15 +140,3 @@ export:
       - index: 26
         label: Ne vežėjui skirta informacija
         path: $.KR52Vaztarastis.NeGelZymos
-
-```
-
-If there is need exports may be different. Just create `application.yaml` file in the root directory of installed application.
-
-Note: for array based aggregations following functions may be used for `JsonPath` expressions:
-* `.sum()` - sums all values of selected fields. Converting values to `decimal`
-* `.all()` - takes all elements of selected fields
-* `.distinct()` - takes unique elements of selected fields
-
-## Access LTG services
-To access LTG services Your IP must be white listed by LTG. 
