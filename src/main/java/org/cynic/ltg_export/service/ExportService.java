@@ -35,7 +35,7 @@ import java.util.stream.Stream;
 
 @Component
 public class ExportService {
-
+private static final  String LIST_ITEM = "* ";
   private final Function<OutputStream, CSVPrinter> csvPrinter;
   private final Set<Configuration.ExportConfiguration.ReportExportConfiguration> configurations;
 
@@ -101,7 +101,8 @@ public class ExportService {
       .flatMap(Collection::stream)
       .map(Object::toString)
       .distinct()
-      .collect(Collectors.joining(";"));
+      .map(it-> StringUtils.prependIfMissing(it, LIST_ITEM))
+      .collect(Collectors.joining(System.lineSeparator()));
   }
 
   private BigDecimal sumAggregate(Object item) {
@@ -123,7 +124,8 @@ public class ExportService {
       .stream()
       .flatMap(Collection::stream)
       .map(Object::toString)
-      .collect(Collectors.joining(","));
+      .map(it-> StringUtils.prependIfMissing(it, LIST_ITEM))
+      .collect(Collectors.joining(System.lineSeparator()));
   }
 
   private Object parse(JsonNode json, String path) {
