@@ -17,10 +17,10 @@
 
             <Label text="%file" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
             <TextField fx:id="file" GridPane.columnIndex="2" GridPane.rowIndex="3" disable="true"/>
-            <Button fx:id="browse" GridPane.columnIndex="3" GridPane.rowIndex="3" text="%browse" onAction="#onBroseAction"/>
+            <Button GridPane.columnIndex="3" GridPane.rowIndex="3" text="%browse" onAction="#onBroseAction"/>
 
             <Label text="%login.remember-me" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-            <CheckBox fx:id="rememberMe" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+            <CheckBox fx:id="rememberMe" GridPane.columnIndex="2" GridPane.rowIndex="4" onAction="#onRememberMe"/>
 
             <!-- Filter -->
             <Label text="%filter.payment-period" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
@@ -61,8 +61,4 @@
             <Button fx:id="export" onAction="#onExportAction" text="%export" GridPane.columnIndex="1" GridPane.rowIndex="20"/>
         </GridPane>
     </VBox>
-
-    <Pane fx:id="modal" style="-fx-background-color: rgba(0, 0, 0, 0.5);"
-          visible="false" StackPane.alignment="CENTER">
-    </Pane>
 </StackPane>

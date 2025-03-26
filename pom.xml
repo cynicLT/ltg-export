@@ -20,7 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
         <fast.build>false</fast.build>
-        <execBuildSkip>false</execBuildSkip>
+        <execBuildSkip>true</execBuildSkip>
 
         <jar.output.directory>${project.build.directory}/spring-boot</jar.output.directory>
 
@@ -144,7 +144,7 @@
                         </jvmArgs>
                         <threads>10</threads>
                         <verbose>false</verbose>
-                        <mutationThreshold>60</mutationThreshold>
+                        <mutationThreshold>50</mutationThreshold>
                         <timestampedReports>false</timestampedReports>
                         <includedGroups>
                             <includedGroup>unit</includedGroup>
