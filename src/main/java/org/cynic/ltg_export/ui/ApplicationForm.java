@@ -14,7 +14,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import net.synedra.validatorfx.Validator;
@@ -59,9 +58,6 @@ public class ApplicationForm extends Application implements Initializable {
   @FXML
   public CheckBox rememberMe;
 
-
-  @FXML
-  private Button browse;
   @FXML
   private TextField file;
   @FXML
@@ -88,8 +84,6 @@ public class ApplicationForm extends Application implements Initializable {
   public Button export;
   @FXML
   public ChoiceBox<String> name;
-  @FXML
-  public Pane modal;
 
   private static final Validator VALIDATOR = new Validator();
   private static final Preferences PREFERENCES = Preferences.userNodeForPackage(ApplicationForm.class);
@@ -152,28 +146,17 @@ public class ApplicationForm extends Application implements Initializable {
         paymentPeriod,
         file
       )
-      .forEach(field -> {
-        VALIDATOR.createCheck()
-          .withMethod(context -> Optional.of(field)
-            .filter(it -> StringUtils.isBlank(it.getText()))
-            .ifPresent(it -> context.error("!")))
-          .decorates(field);
-      });
+      .forEach(field -> VALIDATOR.createCheck()
+        .withMethod(context -> Optional.of(field)
+          .filter(it -> StringUtils.isBlank(it.getText()))
+          .ifPresent(it -> context.error("!")))
+        .decorates(field));
   }
 
 
   @FXML
   public void onExportAction() {
     try {
-      modal.setVisible(Boolean.TRUE);
-
-      Optional.of(rememberMe)
-        .filter(CheckBox::isSelected)
-        .ifPresentOrElse(
-          ignored -> storeCredentials(),
-          this::removeCredentials
-        );
-
       Optional.of(VALIDATOR.validate())
         .filter(Boolean.TRUE::equals)
         .map(it -> export())
@@ -182,23 +165,27 @@ public class ApplicationForm extends Application implements Initializable {
       AlertUtils.error(e);
     } catch (Throwable e) {
       AlertUtils.error(e);
-    } finally {
-      modal.setVisible(Boolean.FALSE);
     }
   }
 
-  private void removeCredentials() {
-    PREFERENCES.remove(username.getId());
-    PREFERENCES.remove(password.getId());
-    PREFERENCES.remove(rememberMe.getId());
-    PREFERENCES.remove(file.getId());
-  }
+  public void onRememberMe(ActionEvent event) {
+    Optional.of(rememberMe)
+      .filter(CheckBox::isSelected)
+      .ifPresentOrElse(
+        ignored -> {
+          PREFERENCES.put(username.getId(), username.getText());
+          PREFERENCES.put(password.getId(), password.getText());
+          PREFERENCES.putBoolean(rememberMe.getId(), rememberMe.isSelected());
+          PREFERENCES.put(file.getId(), file.getText());
 
-  private void storeCredentials() {
-    PREFERENCES.put(username.getId(), username.getText());
-    PREFERENCES.put(password.getId(), password.getText());
-    PREFERENCES.putBoolean(rememberMe.getId(), rememberMe.isSelected());
-    PREFERENCES.put(file.getId(), file.getText());
+        },
+        () -> {
+          PREFERENCES.remove(username.getId());
+          PREFERENCES.remove(password.getId());
+          PREFERENCES.remove(rememberMe.getId());
+          PREFERENCES.remove(file.getId());
+        }
+      );
   }
 
   public void onBroseAction(ActionEvent event) {
