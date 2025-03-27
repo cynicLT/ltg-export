@@ -54,11 +54,14 @@ export:
         label: Išduotas
         path: $.KR99Vaztarastis.IsdavimoLaikas
       - index: 11
-        label: Suma (su PVM)
+        label: Suma (bendra su PVM)
         path: $.KR99Vaztarastis.KR99Mokesciai[*].SumaSuPVMValiuta.sum()
       - index: 12
+        label: Suma (su PVM)
+        path: $.KR99Vaztarastis.KR99Mokesciai[*].SumaSuPVMValiuta.all()
+      - index: 13
         label: Valiuta
-        path: $.KR99Vaztarastis.KR99Mokesciai[*].VezimoTarifoValiuta.distinct()
+        path: $.KR99Vaztarastis.KR99Mokesciai[*].VezimoTarifoValiuta.all()
   - name: KR52_Default
     type: KR52
     fields:
