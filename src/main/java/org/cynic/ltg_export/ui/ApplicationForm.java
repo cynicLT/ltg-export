@@ -32,6 +32,8 @@ import org.cynic.ltg_export.function.ThrowingFunction;
 import org.cynic.ltg_export.service.ExportService;
 import org.cynic.ltg_export.service.WebService;
 import org.cynic.ltg_export.ui.util.AlertUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
@@ -50,6 +52,7 @@ import java.util.prefs.Preferences;
 import java.util.stream.Stream;
 
 public class ApplicationForm extends Application implements Initializable {
+  private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationForm.class);
 
   @FXML
   public PasswordField username;
@@ -162,8 +165,10 @@ public class ApplicationForm extends Application implements Initializable {
         .map(it -> export())
         .ifPresent(it -> AlertUtils.info("Export completed", "Export saved in " + it));
     } catch (ApplicationException e) {
+      LOGGER.error("", e);
       AlertUtils.error(e);
     } catch (Throwable e) {
+      LOGGER.error("", e);
       AlertUtils.error(e);
     }
   }

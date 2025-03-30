@@ -8,7 +8,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.4.2</version>
-        <relativePath/>
+        <relativePath />
     </parent>
 
     <groupId>org.cynic</groupId>
@@ -273,7 +273,6 @@
                     <artifactId>dependency-check-maven</artifactId>
                     <version>${maven.plugin.owasp.version}</version>
                     <configuration>
-                        <!--                        <skip>${fast.build}</skip>-->
                         <skip>true</skip>
                         <skipTestScope>true</skipTestScope>
                         <skipProvidedScope>true</skipProvidedScope>
@@ -341,7 +340,7 @@
                             <requireJavaVersion>
                                 <version>${java.version}</version>
                             </requireJavaVersion>
-                            <banDuplicatePomDependencyVersions/>
+                            <banDuplicatePomDependencyVersions />
                             <bannedDependencies>
                                 <excludes>
                                     <exclude>junit:junit</exclude>
@@ -351,7 +350,7 @@
                             <requireMavenVersion>
                                 <version>3.6.3</version>
                             </requireMavenVersion>
-                            <requireReleaseDeps/>
+                            <requireReleaseDeps />
                         </rules>
                     </configuration>
                 </plugin>
@@ -817,7 +816,11 @@
             <artifactId>commons-csv</artifactId>
             <version>${commons-csv.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy-jsr223</artifactId>
+            <version>4.0.23</version>
+        </dependency>
 
         <dependency>
             <groupId>org.openjfx</groupId>
