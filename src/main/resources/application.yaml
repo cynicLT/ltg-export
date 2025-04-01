@@ -45,6 +45,7 @@ export:
       - index: 6
         label: Krovinys BKN
         path: $.KR99Vaztarastis.KR99Kroviniai.KrovinioPavLT
+        transform: value.replaceAll("\\r\\n|\\r|\\n", "")
       - index: 7
         label: Masė, kg
         path: $.KR99Vaztarastis.KR99Kroviniai.MaseKrovinioKG
@@ -95,6 +96,7 @@ export:
       - index: 8
         label: Krovinio pavadinimas
         path: $.KR52Vaztarastis.KrovinioPav
+        transform: value.replaceAll("\\r\\n|\\r|\\n", "")
       - index: 9
         label: Bendra krovinio mase (kg)
         path: $.KR52Vaztarastis.MaseKrovinioKG
@@ -119,9 +121,11 @@ export:
       - index: 16
         label: Krovinio pavadinimas (LT)
         path: $.KR52Vaztarastis.KR52Kroviniai.KrovinioPavLT
+        transform: value.replaceAll("\\r\\n|\\r|\\n", "")
       - index: 17
         label: Krovinio pavadinimas (RU)
         path: $.KR52Vaztarastis.KR52Kroviniai.KrovinioPavRU
+        transform: value.replaceAll("\\r\\n|\\r|\\n", "")
       - index: 18
         label: Krovinio masė (kg)
         path: $.KR52Vaztarastis.KR52Kroviniai.MaseKrovinioKG
@@ -149,9 +153,14 @@ export:
       - index: 26
         label: Ne vežėjui skirta informacija
         path: $.KR52Vaztarastis.NeGelZymos
-        filter: StringUtils.containsIgnoreCase(value, "БАЛТИК КАРГО АГЕНТ")
+        transform: value.replaceAll("\\r\\n|\\r|\\n", "")
       - index: 27
-        label: Pakodis
+        label: Pakodis (23 laukas)
+        path: $.KR52Vaztarastis.KR52Ekspeditoriai[*].EkspeditoriausDuomenysSpausdinimui
+        filter: StringUtils.containsIgnoreCase(value, "БАЛТИК КАРГО АГЕНТ")
+        transform: RegExUtils.dotAllMatcher("БАЛТИК\\s+КАРГО\\s+АГЕНТ.*\\d+\\s*/\\d+\\s*/\\s*(\\d+)", value).results().findFirst().map({ it.group(1) }).orElse("")
+      - index: 28
+        label: Pakodis (25 laukas)
         path: $.KR52Vaztarastis.NeGelZymos
         filter: StringUtils.containsIgnoreCase(value, "БАЛТИК КАРГО АГЕНТ")
         transform: RegExUtils.dotAllMatcher("БАЛТИК\\s+КАРГО\\s+АГЕНТ.*ПОДКОД\s*-?\s*\\d+\\s*/\\s*(\\d+)", value).results().findFirst().map({ it.group(1) }).orElse("")
