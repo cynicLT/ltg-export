@@ -17,6 +17,7 @@ export:
       - index: 1
         label: Galinė stotis
         path: $.KR99Vaztarastis.GalineStotis
+        transform: station.apply(value)
       - index: 2
         label: Siuntėjas
         path: $.KR99Vaztarastis.LietuvosSiuntejas.Pavadinimas
@@ -45,11 +46,14 @@ export:
         label: Išduotas
         path: $.KR99Vaztarastis.IsdavimoLaikas
       - index: 11
-        label: Suma (su PVM)
-        path: $.KR99Vaztarastis.KR99Mokesciai[*].SumaSuPVMValiuta.sum()
+        label: Suma (bendra su PVM)
+        path: $.KR99Vaztarastis.KR99Mokesciai[*].SumaSuPVMValiuta
       - index: 12
+        label: Suma (su PVM)
+        path: $.KR99Vaztarastis.KR99Mokesciai[*].SumaSuPVMValiuta
+      - index: 13
         label: Valiuta
-        path: $.KR99Vaztarastis.KR99Mokesciai[*].VezimoTarifoValiuta.distinct()
+        path: $.KR99Vaztarastis.KR99Mokesciai[*].VezimoTarifoValiuta
   - name: KR52_Default
     type: KR52
     fields:
@@ -62,9 +66,11 @@ export:
       - index: 3
         label: Pradinė stotis
         path: $.KR52Vaztarastis.PradineStotis
+        transform: station.apply(value)
       - index: 4
         label: Galinė stotis
         path: $.KR52Vaztarastis.GalineStotis
+        transform: station.apply(value)
       - index: 5
         label: Paraiškos nr
         path: $.KR52Vaztarastis.ParaiskosNr
@@ -118,28 +124,33 @@ export:
         path: $.KR52Vaztarastis.KR52Vagonai.Savininkas
       - index: 22
         label: Spaudo data
-        path: $.KR52Vaztarastis.KR52PasienioStotis[*].SpaudasData.all()
+        path: $.KR52Vaztarastis.KR52PasienioStotis[*].SpaudasData
       - index: 23
         label: Ekspeditorius
-        path: $.KR52Vaztarastis.KR52Ekspeditoriai[*].Ekspeditorius.all()
+        path: $.KR52Vaztarastis.KR52Ekspeditoriai[*].Ekspeditorius
       - index: 24
         label: Ekspeditoriaus kodas
-        path: $.KR52Vaztarastis.KR52Ekspeditoriai[*].EkspeditoriusKodas.all()
+        path: $.KR52Vaztarastis.KR52Ekspeditoriai[*].EkspeditoriusKodas
       - index: 25
         label: Ekspeditoriaus duomenys spausdinimui
-        path: $.KR52Vaztarastis.KR52Ekspeditoriai[*].EkspeditoriausDuomenysSpausdinimui.all()
+        path: $.KR52Vaztarastis.KR52Ekspeditoriai[*].EkspeditoriausDuomenysSpausdinimui
       - index: 26
         label: Ne vežėjui skirta informacija
         path: $.KR52Vaztarastis.NeGelZymos
-
+        filter: StringUtils.containsIgnoreCase(value, "БАЛТИК КАРГО АГЕНТ")
+      - index: 27
+        label: Pakodis
+        path: $.KR52Vaztarastis.NeGelZymos
+        filter: StringUtils.containsIgnoreCase(value, "БАЛТИК КАРГО АГЕНТ")
+        transform: RegExUtils.dotAllMatcher("БАЛТИК\\s+КАРГО\\s+АГЕНТ.*ПОДКОД\s*-?\s*\\d+\\s*/\\s*(\\d+)", value).results().findFirst().map({ it.group(1) }).orElse("")
 ```
 
 If there is need exports may be different. Just create `application.yaml` file in the root directory of installed application.
 
-Note: for array based aggregations following functions may be used for `JsonPath` expressions:
-* `.sum()` - sums all values of selected fields. Converting values to `decimal`
-* `.all()` - takes all elements of selected fields
-* `.distinct()` - takes unique elements of selected fields
+There are possibility to filter and/or transform values using `filter`\ `transform` expressions on field. Expressions are `groovy` based.
+* Value of field has name `value`
+* Apache Commons 3 following utils are imported `StringUtils`, `RegExUtils`
+* for station code lookup to name use `station` function. Call example `station.apply(value)` Function covers majority of post USSR countries rail stations.
 
 ## Access LTG services
 To access LTG services Your IP must be white listed by LTG. 
