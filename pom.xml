@@ -13,7 +13,7 @@
 
     <groupId>org.cynic</groupId>
     <artifactId>ltg-export</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.5</version>
     <packaging>jar</packaging>
 
     <properties>
