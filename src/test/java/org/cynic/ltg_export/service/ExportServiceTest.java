@@ -45,7 +45,7 @@ class ExportServiceTest {
 
   @BeforeEach
   void setUp() {
-    this.exportService = new ExportService(utputStream -> printer, configurations);
+    this.exportService = new ExportService(utputStream -> printer, (expression, value) -> value, configurations);
   }
 
   @Test
@@ -55,7 +55,7 @@ class ExportServiceTest {
     Assertions.assertThat(exportService.export(nameKR99, List.of(item)))
       .isNotNull();
 
-    Mockito.verify(printer).printRecords(Mockito.<List<List<String>>>any());
+    Mockito.verify(printer, Mockito.times(2)).printRecord(Mockito.<List<String>>any());
 
     Mockito.verify(printer).close();
     Mockito.verifyNoMoreInteractions(printer);
@@ -66,7 +66,7 @@ class ExportServiceTest {
     JsonNode item = Instancio.create(ObjectNode.class);
     IOException cause = Instancio.create(IOException.class);
 
-    Mockito.doThrow(cause).when(printer).printRecords(Mockito.<List<List<String>>>any());
+    Mockito.doThrow(cause).when(printer).printRecord(Mockito.<List<String>>any());
 
     Assertions.assertThatThrownBy(() -> exportService.export(nameKR99, List.of(item)))
       .asInstanceOf(InstanceOfAssertFactories.throwable(ApplicationException.class))

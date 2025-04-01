@@ -3,51 +3,49 @@ package org.cynic.ltg_export.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.cynic.ltg_export.Configuration;
 import org.cynic.ltg_export.Configuration.ExportConfiguration.ReportExportConfiguration;
 import org.cynic.ltg_export.Configuration.ExportConfiguration.ReportExportConfiguration.FieldReportExportConfiguration;
-import org.cynic.ltg_export.Constants;
 import org.cynic.ltg_export.domain.ApplicationException;
+import org.cynic.ltg_export.function.ThrowingConsumer;
 import org.cynic.ltg_export.function.ThrowingFunction;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 public class ExportService {
-private static final  String LIST_ITEM = "* ";
+
   private final Function<OutputStream, CSVPrinter> csvPrinter;
+  BiFunction<String, String, String> expression;
   private final Set<Configuration.ExportConfiguration.ReportExportConfiguration> configurations;
 
-  private final Map<String, Function<Object, Object>> AGGREGATE_FUNCTIONS =
-    Map.ofEntries(
-      Map.entry(".all()", this::allAggregate),
-      Map.entry(".sum()", this::sumAggregate),
-      Map.entry(".distinct()", this::distinctAggregate)
-    );
+  public ExportService(
+    Function<OutputStream, CSVPrinter> csvPrinter,
+    BiFunction<String, String, String> expression,
+    Set<Configuration.ExportConfiguration.ReportExportConfiguration> configurations) {
 
-  public ExportService(Function<OutputStream, CSVPrinter> csvPrinter, Set<Configuration.ExportConfiguration.ReportExportConfiguration> configurations) {
     this.csvPrinter = csvPrinter;
+    this.expression = expression;
     this.configurations = configurations;
   }
 
@@ -63,27 +61,16 @@ private static final  String LIST_ITEM = "* ";
 
     try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
          CSVPrinter printer = csvPrinter.apply(outputStream)) {
+      printer.printRecord(header(configuration));
 
-      List<List<String>> lines = Stream.concat(
-        Stream.of(
-          configuration.fields()
-            .stream()
-            .sorted(Comparator.comparingInt(FieldReportExportConfiguration::index))
-            .map(FieldReportExportConfiguration::label)
-            .toList()
-        ),
-        items.stream()
-          .map(item -> configuration.fields()
-            .stream()
-            .sorted(Comparator.comparingInt(FieldReportExportConfiguration::index))
-            .map(FieldReportExportConfiguration::path)
-            .map(it -> parse(item, it))
-            .map(it -> Objects.toString(it, StringUtils.EMPTY))
-            .toList()
+      items.parallelStream().map(it -> line(it, configuration))
+        .flatMap(Collection::stream)
+        .forEach(ThrowingConsumer.withTry(
+          printer::printRecord,
+          e -> new ApplicationException("error.export.print",
+            Map.entry("message", ExceptionUtils.getRootCauseMessage(e))
           )
-      ).toList();
-
-      printer.printRecords(lines);
+        ));
 
       return outputStream::toByteArray;
     } catch (IOException e) {
@@ -93,55 +80,79 @@ private static final  String LIST_ITEM = "* ";
     }
   }
 
-  private String distinctAggregate(Object item) {
-    return Optional.ofNullable(item)
-      .filter(it -> ClassUtils.isAssignable(it.getClass(), JSONArray.class))
-      .map(JSONArray.class::cast)
+  private List<List<String>> line(JsonNode item, ReportExportConfiguration configuration) {
+    return cartesian(
+      configuration.fields()
+        .stream()
+        .sorted(Comparator.comparingInt(FieldReportExportConfiguration::index))
+        .map(it -> parse(item, it))
+        .toList()
+    );
+  }
+
+  private static List<String> header(ReportExportConfiguration configuration) {
+    return configuration.fields()
       .stream()
-      .flatMap(Collection::stream)
-      .map(Object::toString)
+      .sorted(Comparator.comparingInt(FieldReportExportConfiguration::index))
+      .map(FieldReportExportConfiguration::label)
+      .toList();
+  }
+
+  private static List<List<String>> cartesian(List<List<String>> data) {
+    return data.stream()
+      .map(it -> it.stream().map(Arrays::asList).toList())
+      .reduce((item, other) -> item.stream()
+        .flatMap(value -> other.stream().map(otherValue -> {
+          List<String> merged = new ArrayList<>(value);
+          merged.addAll(otherValue);
+          return merged;
+        }))
+        .toList())
+      .orElse(List.of())
+      .stream()
       .distinct()
-      .map(it-> StringUtils.prependIfMissing(it, LIST_ITEM))
-      .collect(Collectors.joining(System.lineSeparator()));
+      .toList();
   }
 
-  private BigDecimal sumAggregate(Object item) {
-    return Optional.ofNullable(item)
-      .filter(it -> ClassUtils.isAssignable(it.getClass(), JSONArray.class))
-      .map(JSONArray.class::cast)
-      .stream()
-      .flatMap(Collection::stream)
-      .map(Object::toString)
-      .filter(NumberUtils::isCreatable)
-      .map(NumberUtils::createBigDecimal)
-      .reduce(BigDecimal.ZERO, BigDecimal::add).setScale(Constants.SCALE, RoundingMode.HALF_UP);
-  }
-
-  private String allAggregate(Object item) {
-    return Optional.ofNullable(item)
-      .filter(it -> ClassUtils.isAssignable(it.getClass(), JSONArray.class))
-      .map(JSONArray.class::cast)
-      .stream()
-      .flatMap(Collection::stream)
-      .map(Object::toString)
-      .map(it-> StringUtils.prependIfMissing(it, LIST_ITEM))
-      .collect(Collectors.joining(System.lineSeparator()));
-  }
-
-  private Object parse(JsonNode json, String path) {
-    return AGGREGATE_FUNCTIONS.entrySet()
-      .stream()
-      .filter(it -> StringUtils.endsWith(path, it.getKey()))
-      .findAny()
-      .map(it ->
-        Map.entry(StringUtils.substringBeforeLast(path, it.getKey()), it.getValue())
-      )
-      .or(() -> Optional.of(Map.entry(path, object -> object))
-      )
+  private List<String> parse(JsonNode item, FieldReportExportConfiguration field) {
+    return Optional.of(item)
+      .map(JsonNode::toString)
       .map(ThrowingFunction.withTry(
-        it -> it.getValue().apply(JsonPath.read(json.toString(), it.getKey())),
-        () -> null
+        it -> JsonPath.<Object>read(it, field.path()),
+        () -> StringUtils.EMPTY
       ))
-      .orElse(null);
+      .map(result -> Optional.of(result)
+        .filter(it -> ClassUtils.isAssignable(it.getClass(), JSONArray.class))
+        .map(it -> JSONArray.class.cast(it)
+          .stream()
+          .toList()
+        )
+        .orElse(List.of(result))
+        .stream()
+        .map(Object::toString)
+        .map(it -> mutate(field, it))
+        .toList()
+      )
+      .filter(CollectionUtils::isNotEmpty)
+      .orElse(List.of(StringUtils.EMPTY));
+  }
+
+  private String mutate(FieldReportExportConfiguration field, String value) {
+    Boolean filter = Optional.of(field)
+      .map(FieldReportExportConfiguration::filter)
+      .map(StringUtils::trimToNull)
+      .map(it -> expression.apply(it, value))
+      .map(BooleanUtils::toBoolean)
+      .orElse(Boolean.TRUE);
+
+    return Optional.of(filter)
+      .filter(Boolean.TRUE::equals)
+      .map(it -> Optional.of(field)
+        .map(FieldReportExportConfiguration::transform)
+        .map(StringUtils::trimToNull)
+        .map(t -> expression.apply(t, value))
+        .map(Object::toString)
+        .orElse(value)
+      ).orElse(StringUtils.EMPTY);
   }
 }

@@ -13,6 +13,8 @@ public class StartApplicationListener implements ApplicationListener<Application
     public void onApplicationEvent(ApplicationReadyEvent event) {
         ApplicationContextHolder.setApplicationContext(event.getApplicationContext());
 
-        Executors.newSingleThreadExecutor().submit(() -> LauncherImpl.launchApplication(ApplicationForm.class, null));
+        Executors.defaultThreadFactory()
+            .newThread(() -> LauncherImpl.launchApplication(ApplicationForm.class, null))
+            .start();
     }
 }
