@@ -18,6 +18,7 @@ import static java.time.temporal.ChronoField.YEAR;
 
 public final class Constants {
 
+
   private Constants() {
   }
 
@@ -25,7 +26,7 @@ public final class Constants {
   public static final Marker AUDIT_MARKER = MarkerFactory.getMarker("AUDIT");
   public static final ZoneId SYSTEM_ZONE_ID = ZoneId.systemDefault();
   public static final Locale LOCALE = Locale.forLanguageTag("lt");
-  public static final Integer SCALE = 3;
+  public static final String VALUE = "value";
 
   public static final DateTimeFormatter YYYY_MM_DD_HH_MM_SS = new DateTimeFormatterBuilder()
     .appendValue(YEAR, 4, 10, SignStyle.EXCEEDS_PAD)
@@ -42,7 +43,13 @@ public final class Constants {
     .toFormatter(LOCALE);
 
   public enum Template {
-    JXML_PATH("/jxml/%s.fxml");
+    JXML_PATH("/jxml/%s.fxml"),
+    EXPRESSION("""
+      import %s;
+      import %s;
+      
+      %s
+      """);
 
     private final String template;
 

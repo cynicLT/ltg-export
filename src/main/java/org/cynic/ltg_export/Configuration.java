@@ -6,11 +6,15 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.QuoteMode;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.RegExUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.cynic.ltg_export.Configuration.ExportConfiguration.ReportExportConfiguration;
 import org.cynic.ltg_export.client.ltg.WaybillsImportService;
 import org.cynic.ltg_export.client.ltg.WaybillsImportServiceSoap;
 import org.cynic.ltg_export.domain.ApplicationException;
+import org.cynic.ltg_export.function.ThrowingFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,15 +22,21 @@ import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigurationExcludeFilter;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration;
+import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.context.TypeExcludeFilter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
+import javax.script.Bindings;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -39,6 +49,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @SpringBootConfiguration(proxyBeanMethods = false)
@@ -48,6 +59,9 @@ import java.util.function.Function;
 
   //    Jackson configuration
   JacksonAutoConfiguration.class,
+
+  //    Message source
+  MessageSourceAutoConfiguration.class
 
 })
 @ComponentScan(excludeFilters = {@ComponentScan.Filter(type = FilterType.CUSTOM, classes = {TypeExcludeFilter.class}),
@@ -103,8 +117,41 @@ public class Configuration {
             .setQuoteMode(QuoteMode.ALL)
             .build());
       } catch (IOException e) {
-        throw new ApplicationException("error.csv-printer", Map.entry("message", ExceptionUtils.getRootCauseMessage(e)));
+        throw new ApplicationException(
+          "error.csv-printer",
+          Map.entry("message", ExceptionUtils.getRootCauseMessage(e))
+        );
       }
+    };
+  }
+
+
+  @Bean
+  public BiFunction<String, String, String> expression(MessageSource messageSource) {
+    ScriptEngineManager manager = new ScriptEngineManager();
+
+    return (expression, item) -> {
+      ScriptEngine engine = manager.getEngineByName("groovy");
+      Bindings bindings = engine.createBindings();
+      bindings.put("value", item);
+      bindings.put("station", (Function<String, String>) value -> messageSource.getMessage(value, null, Constants.LOCALE));
+
+      String script = Constants.Template.EXPRESSION.template(
+        ClassUtils.getCanonicalName(StringUtils.class),
+        ClassUtils.getCanonicalName(RegExUtils.class),
+        expression
+      );
+
+      engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
+
+      return Optional.of(engine)
+        .map(ThrowingFunction.withTry(
+          it -> it.eval(script),
+          () -> StringUtils.EMPTY
+        ))
+        .map(Object::toString)
+        .orElse(StringUtils.EMPTY);
+
     };
   }
 
@@ -117,7 +164,7 @@ public class Configuration {
         KR99, KR52
       }
 
-      public record FieldReportExportConfiguration(Integer index, String label, String path) {
+      public record FieldReportExportConfiguration(Integer index, String label, String path, String filter, String transform) {
 
       }
     }
