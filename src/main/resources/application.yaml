@@ -164,3 +164,21 @@ export:
         path: $.KR52Vaztarastis.NeGelZymos
         filter: StringUtils.containsIgnoreCase(value, "БАЛТИК КАРГО АГЕНТ")
         transform: RegExUtils.dotAllMatcher("БАЛТИК\\s+КАРГО\\s+АГЕНТ.*ПОДКОД\s*-?\s*\\d+\\s*/\\s*(\\d+)", value).results().findFirst().map({ it.group(1) }).orElse("")
+      - index: 29
+        label: Tarifų knygos pavadinimas
+        path: $.KR52Vaztarastis.KR52Mokesciai.TarifuKnygosPav
+      - index: 30
+        label: Vežimo tarifas
+        path: $.KR52Vaztarastis.KR52Mokesciai.VezimoTarifas
+      - index: 31
+        label: Vežimo tarifo valiuta
+        path: $.KR52Vaztarastis.KR52Mokesciai.VezimoTarifoValiuta
+      - index: 32
+        label: Suma (be PVM)
+        path: $.KR52Vaztarastis.KR52Mokesciai.SumaBePVMValiuta
+      - index: 33
+        label: Suma (ue PVM)
+        path: $.KR52Vaztarastis.KR52Mokesciai.SumaSuPVMValiuta
+      - index: 34
+        label: Mokesčio šalis
+        path: $.KR52Vaztarastis.KR52Mokesciai.Salis
