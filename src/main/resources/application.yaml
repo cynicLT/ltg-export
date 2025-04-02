@@ -59,14 +59,17 @@ export:
         label: Išduotas
         path: $.KR99Vaztarastis.IsdavimoLaikas
       - index: 11
-        label: Suma (bendra su PVM)
-        path: $.KR99Vaztarastis.KR99Mokesciai[*].SumaSuPVMValiuta
-      - index: 12
         label: Suma (su PVM)
         path: $.KR99Vaztarastis.KR99Mokesciai[*].SumaSuPVMValiuta
+      - index: 12
+        label: Suma (be PVM)
+        path: $.KR99Vaztarastis.KR99Mokesciai[*].SumaBePVMValiuta
       - index: 13
         label: Valiuta
         path: $.KR99Vaztarastis.KR99Mokesciai[*].VezimoTarifoValiuta
+      - index: 14
+        label: Tarifų knygos pavadinimas
+        path: $.KR99Vaztarastis.KR99Mokesciai[*].TarifuKnygosPav
   - name: KR52_Default
     type: KR52
     fields:
