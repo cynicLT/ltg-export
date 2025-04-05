@@ -44,11 +44,11 @@ export:
         path: $.KR99Vaztarastis.KrovosKompanija
       - index: 6
         label: Krovinys BKN
-        path: $.KR99Vaztarastis.KR99Kroviniai.KrovinioPavLT
+        path: $.KR99Vaztarastis.KR99Kroviniai..KrovinioPavLT
         transform: value.replaceAll("\\r\\n|\\r|\\n", "")
       - index: 7
         label: Masė, kg
-        path: $.KR99Vaztarastis.KR99Kroviniai.MaseKrovinioKG
+        path: $.KR99Vaztarastis.KR99Kroviniai..MaseKrovinioKG
       - index: 8
         label: Išsiųstas
         path: $.KR99Vaztarastis.IsvykimoLaikas
@@ -60,16 +60,16 @@ export:
         path: $.KR99Vaztarastis.IsdavimoLaikas
       - index: 11
         label: Suma (su PVM)
-        path: $.KR99Vaztarastis.KR99Mokesciai[*].SumaSuPVMValiuta
+        path: $.KR99Vaztarastis.KR99Mokesciai..SumaSuPVMValiuta
       - index: 12
         label: Suma (be PVM)
-        path: $.KR99Vaztarastis.KR99Mokesciai[*].SumaBePVMValiuta
+        path: $.KR99Vaztarastis.KR99Mokesciai..SumaBePVMValiuta
       - index: 13
         label: Valiuta
-        path: $.KR99Vaztarastis.KR99Mokesciai[*].VezimoTarifoValiuta
+        path: $.KR99Vaztarastis.KR99Mokesciai..VezimoTarifoValiuta
       - index: 14
         label: Tarifų knygos pavadinimas
-        path: $.KR99Vaztarastis.KR99Mokesciai[*].TarifuKnygosPav
+        path: $.KR99Vaztarastis.KR99Mokesciai..TarifuKnygosPav
   - name: KR52_Default
     type: KR52
     fields:
@@ -120,68 +120,68 @@ export:
         path: $.KR52Vaztarastis.Gavejas.Pavadinimas
       - index: 15
         label: Krovinio kodas (krovinys)
-        path: $.KR52Vaztarastis.KR52Kroviniai.KrovinioKodas
+        path: $.KR52Vaztarastis.KR52Kroviniai[*].KrovinioKodas
       - index: 16
         label: Krovinio pavadinimas (LT)
-        path: $.KR52Vaztarastis.KR52Kroviniai.KrovinioPavLT
+        path: $.KR52Vaztarastis.KR52Kroviniai..KrovinioPavLT
         transform: value.replaceAll("\\r\\n|\\r|\\n", "")
       - index: 17
         label: Krovinio pavadinimas (RU)
-        path: $.KR52Vaztarastis.KR52Kroviniai.KrovinioPavRU
+        path: $.KR52Vaztarastis.KR52Kroviniai..KrovinioPavRU
         transform: value.replaceAll("\\r\\n|\\r|\\n", "")
       - index: 18
         label: Krovinio masė (kg)
-        path: $.KR52Vaztarastis.KR52Kroviniai.MaseKrovinioKG
+        path: $.KR52Vaztarastis.KR52Kroviniai..MaseKrovinioKG
       - index: 19
         label: Krovino kodas (ETSNG)
-        path: $.KR52Vaztarastis.KR52Kroviniai.KrovinioKodasETSNG
+        path: $.KR52Vaztarastis.KR52Kroviniai..KrovinioKodasETSNG
       - index: 20
         label: Vagono numeris
-        path: $.KR52Vaztarastis.KR52Vagonai.Numeris
+        path: $.KR52Vaztarastis.KR52Vagonai..Numeris
       - index: 21
         label: Savininikas
-        path: $.KR52Vaztarastis.KR52Vagonai.Savininkas
+        path: $.KR52Vaztarastis.KR52Vagonai..Savininkas
       - index: 22
         label: Spaudo data
-        path: $.KR52Vaztarastis.KR52PasienioStotis[*].SpaudasData
+        path: $.KR52Vaztarastis.KR52PasienioStotis..SpaudasData
       - index: 23
         label: Ekspeditorius
-        path: $.KR52Vaztarastis.KR52Ekspeditoriai[*].Ekspeditorius
+        path: $.KR52Vaztarastis.KR52Ekspeditoriai..Ekspeditorius
       - index: 24
         label: Ekspeditoriaus kodas
-        path: $.KR52Vaztarastis.KR52Ekspeditoriai[*].EkspeditoriusKodas
+        path: $.KR52Vaztarastis.KR52Ekspeditoriai..EkspeditoriusKodas
       - index: 25
         label: Ekspeditoriaus duomenys spausdinimui
-        path: $.KR52Vaztarastis.KR52Ekspeditoriai[*].EkspeditoriausDuomenysSpausdinimui
+        path: $.KR52Vaztarastis.KR52Ekspeditoriai..EkspeditoriausDuomenysSpausdinimui
       - index: 26
         label: Ne vežėjui skirta informacija
         path: $.KR52Vaztarastis.NeGelZymos
         transform: value.replaceAll("\\r\\n|\\r|\\n", "")
       - index: 27
         label: Pakodis (23 laukas)
-        path: $.KR52Vaztarastis.KR52Ekspeditoriai[*].EkspeditoriausDuomenysSpausdinimui
+        path: $.KR52Vaztarastis.KR52Ekspeditoriai..EkspeditoriausDuomenysSpausdinimui
         filter: StringUtils.containsIgnoreCase(value, "БАЛТИК КАРГО АГЕНТ")
-        transform: RegExUtils.dotAllMatcher("БАЛТИК\\s+КАРГО\\s+АГЕНТ.*\\d+\\s*/\\d+\\s*/\\s*(\\d+)", value).results().findFirst().map({ it.group(1) }).orElse("")
+        transform: RegExUtils.dotAllMatcher("БАЛТИК\\s+КАРГО\\s+АГЕНТ.*\\d+\\s*/\\d+\\s*/\\s*(\\d+)", StringUtils.upperCase(value)).results().findFirst().map({ it.group(1) }).orElse("")
       - index: 28
         label: Pakodis (25 laukas)
         path: $.KR52Vaztarastis.NeGelZymos
         filter: StringUtils.containsIgnoreCase(value, "БАЛТИК КАРГО АГЕНТ")
-        transform: RegExUtils.dotAllMatcher("БАЛТИК\\s+КАРГО\\s+АГЕНТ.*ПОДКОД\s*-?\s*\\d+\\s*/\\s*(\\d+)", value).results().findFirst().map({ it.group(1) }).orElse("")
+        transform: RegExUtils.dotAllMatcher("БАЛТИК\\s+КАРГО\\s+АГЕНТ.*\\d+\\s*/\\s*(\\d+)", StringUtils.upperCase(value)).results().findFirst().map({ it.group(1) }).orElse("")
       - index: 29
         label: Tarifų knygos pavadinimas
-        path: $.KR52Vaztarastis.KR52Mokesciai.TarifuKnygosPav
+        path: $.KR52Vaztarastis.KR52Mokesciai..TarifuKnygosPav
       - index: 30
         label: Vežimo tarifas
-        path: $.KR52Vaztarastis.KR52Mokesciai.VezimoTarifas
+        path: $.KR52Vaztarastis.KR52Mokesciai..VezimoTarifas
       - index: 31
         label: Vežimo tarifo valiuta
-        path: $.KR52Vaztarastis.KR52Mokesciai.VezimoTarifoValiuta
+        path: $.KR52Vaztarastis.KR52Mokesciai..VezimoTarifoValiuta
       - index: 32
         label: Suma (be PVM)
-        path: $.KR52Vaztarastis.KR52Mokesciai.SumaBePVMValiuta
+        path: $.KR52Vaztarastis.KR52Mokesciai..SumaBePVMValiuta
       - index: 33
-        label: Suma (ue PVM)
-        path: $.KR52Vaztarastis.KR52Mokesciai.SumaSuPVMValiuta
+        label: Suma (su PVM)
+        path: $.KR52Vaztarastis.KR52Mokesciai..SumaSuPVMValiuta
       - index: 34
         label: Mokesčio šalis
-        path: $.KR52Vaztarastis.KR52Mokesciai.Salis
+        path: $.KR52Vaztarastis.KR52Mokesciai..Salis
